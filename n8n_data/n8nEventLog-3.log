@@ -1,0 +1,2 @@
+{"__type":"$$EventMessageAudit","id":"ad6db121-60d4-4659-89cf-90eb98f65ce7","ts":"2025-07-30T00:28:45.749+00:00","eventName":"n8n.audit.user.login.success","message":"n8n.audit.user.login.success","payload":{"userId":"db72ede4-3d3a-48f6-8663-2e2fd374c616","_email":"gabriel.hungaro.ribeiro@gmail.com","_firstName":"Gabriel","_lastName":"Hungaro","globalRole":"global:owner","authenticationMethod":"email"}}
+{"__type":"$$EventMessageConfirm","confirm":"ad6db121-60d4-4659-89cf-90eb98f65ce7","ts":"2025-07-30T00:28:45.749+00:00","source":{"id":"0","name":"eventBus"}}

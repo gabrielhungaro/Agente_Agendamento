@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  n8n:
+    image: n8nio/n8n
+    container_name: n8n_service
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_BLOCK_PRIVATE_NETWORKS=false
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - NODE_ENV=production
+      - WEBHOOK_URL=http://n8n:5678/
+      - GENERIC_TIMEZONE=America/Sao_Paulo # <-- Ajuste para seu fuso horário
+      - NODE_FUNCTION_ALLOW_EXTERNAL=luxon
+    volumes:
+      - ./n8n_data:/home/node/.n8n
+    networks:
+      - app-network
+
+  redis:
+    image: redis:latest
+    container_name: redis_service
+    #command: redis-server --save 20 1 --loglevel warning
+    command: redis-server --requirepass default
+    environment:
+      REDIS_USER: default
+      REDIS_PASSWORD: default
+    volumes:
+      - ./redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+  waha:
+    image: devlikeapro/waha:latest # Imagem recomendada do Waha
+    container_name: waha_service
+    ports:
+      - "3000:3000"
+    environment:
+      # Conecta o Waha ao Redis para salvar a sessão
+      - WHA_ENGINE_SESSION_STORAGE=redis
+      - WHA_REDIS_URL=redis://redis_service:6379
+      #- WHATSAPP_HOOK_URL=http://localhost:5678/webhook/webhook
+      - WHATSAPP_HOOK_URL=http://n8n:5678/webhook/webhook
+      - WHATSAPP_HOOK_EVENTS=message
+    depends_on:
+      - redis
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
