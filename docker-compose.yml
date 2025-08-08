@@ -21,6 +21,7 @@ services:
       - "5678:5678"
     environment:
       - N8N_BLOCK_PRIVATE_NETWORKS=false
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
       # url de produção
       #- N8N_HOST=n8n.vps.hungaroconsultoria.com.br
       # url de teste
