@@ -21,12 +21,18 @@ services:
       - "5678:5678"
     environment:
       - N8N_BLOCK_PRIVATE_NETWORKS=false
-      - N8N_HOST=n8n.vps.hungaroconsultoria.com.br
+      # url de produção
+      #- N8N_HOST=n8n.vps.hungaroconsultoria.com.br
+      # url de teste
+      - N8N_HOST=n8n
       - N8N_PORT=5678
-      - N8N_PROTOCOL=https
-      - NODE_ENV=production
-      - N8N_EDITOR_BASE_URL=https://n8n.vps.hungaroconsultoria.com.br
-      - WEBHOOK_URL=https://webhook.vps.hungaroconsultoria.com.br/
+      - N8N_PROTOCOL=http
+      #- NODE_ENV=production
+      - N8N_EDITOR_BASE_URL=http://n8n:5678/
+      # url de produção
+      #- WEBHOOK_URL=https://n8n.vps.hungaroconsultoria.com.br
+      # url de teste
+      - WEBHOOK_URL=http://n8n:5678/
       - GENERIC_TIMEZONE=America/Sao_Paulo # <-- Ajuste para seu fuso horário
       - NODE_FUNCTION_ALLOW_EXTERNAL=luxon
     volumes:
@@ -68,7 +74,7 @@ services:
     image: postgres:14-alpine # Imagem leve e estável do Postgres
     container_name: postgres_service_vps
     environment:
-      #- POSTGRES_USER=gabriel #não colocar isso na versão que sobe
+      - POSTGRES_USER=gabriel #não colocar isso na versão que sobe
       - POSTGRES_PASSWORD=admin # Mude para uma senha segura
       - POSTGRES_DB=evolution
     volumes:
@@ -94,7 +100,7 @@ services:
       # Conecta o Waha ao Redis para salvar a sessão
       - WHA_ENGINE_SESSION_STORAGE=redis
       - WHA_REDIS_URL=redis://:default@redis_service_vps:6379 # URL correta com senha
-      - WHATSAPP_HOOK_URL=https://waha.vps.hungaroconsultoria.com.br/webhook/webhookagendamento
+      - WHATSAPP_HOOK_URL=http://n8n:5678/webhook/webhookagendamento
       - WHATSAPP_HOOK_EVENTS=message
     depends_on:
       - redis
@@ -119,7 +125,7 @@ services:
       #- CACHE_TYPE=redis
       - CACHE_REDIS_URI=redis://:default@redis_service_vps:6379 # URL correta com senha
       # --- Outras Configurações ---
-      - WEBHOOK_GLOBAL_URL=https://evolutionapi.vps.hungaroconsultoria.com.br/webhook/webhookagendamento # Webhook específico
+      - WEBHOOK_GLOBAL_URL=http://n8n:5678/webhook/webhookagendamento # Webhook específico
       - WEBHOOK_GLOBAL_EVENTS=MESSAGE_RECEIVED,CONNECTION_STATUS
       - AUTHENTICATION_API_KEY=jTUGJBACqMHht7haSTK6dE66zOv6lsetaebRZbtZSV7aVaZQotuocpMIpxRPCS3G9LI9lLuIlKItyoc2RKDvgMhPiIFA4FKonftFz7LbnAyCotITK21czwkInJLLkqlm # Defina uma chave de API segura
       - CONFIG_SESSION_PHONE_VERSION=2.3000.1024876920

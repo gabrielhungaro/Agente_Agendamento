@@ -1,3 +1,21 @@
+# n8n
 n8n.vps.hungaroconsultoria.com.br {
-    reverse_proxy n8n:5678
+    reverse_proxy n8n_service_vps:5678
 }
+
+# Evolution API
+evolutionapi.vps.hungaroconsultoria.com.br {
+    reverse_proxy evolution_api_service_vps:8080
+}
+
+# Waha
+waha.vps.hungaroconsultoria.com.br {
+    reverse_proxy waha_service_vps:3000
+}
+
+# Redis Commander
+redis.vps.hungaroconsultoria.com.br {
+    reverse_proxy redis_commander_service_vps:8081
+}
+
+# Adicione outros serviços se precisar
