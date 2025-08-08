@@ -1,5 +1,5 @@
 # Arquivos e pastas gerados pelo Docker e aplicações
-# postgres_data/
+postgres_data/
 # n8n_data/
 # redis_data/
 # evolution_instances/
