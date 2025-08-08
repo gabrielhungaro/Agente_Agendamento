@@ -20,9 +20,6 @@ services:
     ports:
       - "5678:5678"
     environment:
-      # --- ADICIONE ESTA LINHA ---
-      - PUID=1001
-      - PGID=1001
       - N8N_BLOCK_PRIVATE_NETWORKS=false
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
       # url de produção
