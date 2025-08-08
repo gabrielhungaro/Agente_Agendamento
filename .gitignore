@@ -1,10 +1,10 @@
 # Arquivos e pastas gerados pelo Docker e aplicações
-postgres_data/
+# postgres_data/
 # n8n_data/
-redis_data/
-evolution_instances/
-caddy_data/
-caddy_config/
+# redis_data/
+# evolution_instances/
+# caddy_data/
+# caddy_config/
 
 # Arquivos de sistema operacional
 .DS_Store
