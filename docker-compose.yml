@@ -22,18 +22,22 @@ services:
     environment:
       - N8N_BLOCK_PRIVATE_NETWORKS=false
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
-      # url de produção
-      #- N8N_HOST=n8n.vps.hungaroconsultoria.com.br
-      # url de teste
-      - N8N_HOST=n8n
-      - N8N_PORT=5678
-      - N8N_PROTOCOL=http
-      #- NODE_ENV=production
-      - N8N_EDITOR_BASE_URL=http://n8n:5678/
-      # url de produção
-      #- WEBHOOK_URL=https://n8n.vps.hungaroconsultoria.com.br
-      # url de teste
+    ## URLs de Ambiente Local
+
+      #- N8N_HOST=n8n
+      #- N8N_PROTOCOL=http
+      #- N8N_EDITOR_BASE_URL=http://n8n:5678/
+      #- WEBHOOK_URL=http://n8n:5678/
+
+      ## URLs de Ambiente VPS
+      - N8N_HOST=n8n.vps.hungaroconsultoria.com.br
+      - N8N_PROTOCOL=https
+      - N8N_EDITOR_BASE_URL=https://n8n.vps.hungaroconsultoria.com.br/
       - WEBHOOK_URL=http://n8n:5678/
+      #- WEBHOOK_URL=https://n8n.vps.hungaroconsultoria.com.br
+
+      #- NODE_ENV=production
+      - N8N_PORT=5678
       - GENERIC_TIMEZONE=America/Sao_Paulo # <-- Ajuste para seu fuso horário
       - NODE_FUNCTION_ALLOW_EXTERNAL=luxon
     volumes:

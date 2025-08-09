@@ -9,3 +9,6 @@ caddy_config/
 # Arquivos de sistema operacional
 .DS_Store
 Thumbs.db
+
+# Arquivo de override do docker para config de URLs de ambiente local
+docker-compose.override.yml
