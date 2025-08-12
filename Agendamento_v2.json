@@ -6,7 +6,7 @@
         "rule": {
           "interval": [
             {
-              "field": "minutes"
+              "triggerAtHour": 9
             }
           ]
         }
@@ -15,20 +15,20 @@
       "typeVersion": 1.2,
       "position": [
         -80,
-        -140
+        -176
       ],
       "id": "72865192-97d4-47a4-8f82-f037f855d7f5",
       "name": "Schedule Trigger"
     },
     {
       "parameters": {
-        "jsCode": "const { DateTime } = require('luxon');\n\n// Pega a data/hora atual no fuso de São Paulo\nlet now = DateTime.now().setZone('America/Sao_Paulo');\nlet businessDaysToAdd = 2;\nlet targetDate = now;\n\nwhile (businessDaysToAdd > 0) {\n  targetDate = targetDate.plus({ days: 1 });\n  // Considera sábado (6) e domingo (7) como não úteis\n  if (targetDate.weekday !== 6 && targetDate.weekday !== 7) {\n    businessDaysToAdd--;\n  }\n}\n\n// Formata a data para o formato que o Google Calendar entende (YYYY-MM-DD)\nconst startDate = targetDate.startOf('day').toISODate();\nconst endDate = targetDate.plus({ days: 1 }).endOf('day').toISODate();\n\n// Retorna as datas para os próximos nós usarem\nreturn [{\n  json: {\n    startDate: startDate,\n    endDate: endDate\n  }\n}];\n//3.  Execute este nó clicando no ícone de \"play\" nele. Você deve ver na saída as datas de início e fim para daqui a 3 dias úteis.\n"
+        "jsCode": "const { DateTime } = require('luxon');\n\n// Pega a data/hora atual no fuso de São Paulo\nlet now = DateTime.now().setZone('America/Sao_Paulo');\nlet businessDaysToAdd = $input.first().json.daysToConfirm;\nlet targetDate = now;\n\nwhile (businessDaysToAdd > 0) {\n  targetDate = targetDate.plus({ days: 1 });\n  // Considera sábado (6) e domingo (7) como não úteis\n  if (targetDate.weekday !== 6 && targetDate.weekday !== 7) {\n    businessDaysToAdd--;\n  }\n}\n\n// Formata a data para o formato que o Google Calendar entende (YYYY-MM-DD)\nconst startDate = targetDate.startOf('day').toISODate();\nconst endDate = targetDate.plus({ days: 1 }).endOf('day').toISODate();\n\n// Retorna as datas para os próximos nós usarem\nreturn [{\n  json: {\n    startDate: startDate,\n    endDate: endDate\n  }\n}];\n//3.  Execute este nó clicando no ícone de \"play\" nele. Você deve ver na saída as datas de início e fim para daqui a 3 dias úteis.\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        140,
-        -140
+        352,
+        -128
       ],
       "id": "c2b488db-6433-4f27-9fbd-ff3559926ad7",
       "name": "Code"
@@ -38,9 +38,9 @@
         "operation": "getAll",
         "calendar": {
           "__rl": true,
-          "value": "qsbqq83ubi4kfbfip2lg0rm1s0@group.calendar.google.com",
+          "value": "ebf0cf0fe93d7a2c8bf54773fbdfd4e0dcfb7d8b03417f523fe67b7af57d0ea9@group.calendar.google.com",
           "mode": "list",
-          "cachedResultName": "Análise"
+          "cachedResultName": "Calendário Teste"
         },
         "returnAll": true,
         "timeMin": "={{ $json.startDate }}",
@@ -50,15 +50,15 @@
       "type": "n8n-nodes-base.googleCalendar",
       "typeVersion": 1.3,
       "position": [
-        360,
-        -140
+        576,
+        -128
       ],
       "id": "d5d234bc-a276-4e6e-aeb8-3269c4299a2c",
       "name": "Get many events",
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "acz0rprIptJMajyf",
-          "name": "Google Calendar account 2"
+          "id": "Bct71lYLp9OoL4OX",
+          "name": "Google HC"
         }
       }
     },
@@ -74,8 +74,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        620,
-        100
+        928,
+        608
       ],
       "id": "628137da-12e0-4a31-889e-d8de6459a516",
       "name": "HTTP Request"
@@ -87,8 +87,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        800,
-        -140
+        1008,
+        -128
       ],
       "id": "1909db0e-fbaf-413d-92dc-38b50b1624a4",
       "name": "Edit Fields1"
@@ -97,6 +97,12 @@
       "parameters": {
         "assignments": {
           "assignments": [
+            {
+              "id": "48f76e6a-7bda-485a-b934-095a9e35103e",
+              "name": "nomeCompromisso",
+              "value": "={{ $json.summary }}",
+              "type": "string"
+            },
             {
               "id": "89c05576-a2b7-4847-983a-75640b641eee",
               "name": "emailAgendado1",
@@ -146,8 +152,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        580,
-        -140
+        800,
+        -128
       ],
       "id": "dc5ba90d-7c52-406e-ad92-c3b0a7ac27f9",
       "name": "DadosAgenda"
@@ -179,6 +185,12 @@
               "name": "clientePhone",
               "value": "={{ $json.property_telefone }}",
               "type": "string"
+            },
+            {
+              "id": "057e483f-6dc1-4c42-ad0d-24c117406204",
+              "name": "clienteChatId",
+              "value": "={{ $json.property_telefone.replace(/\\D/g, '') }}@s.whatsapp.net",
+              "type": "string"
             }
           ]
         },
@@ -187,8 +199,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        140,
-        100
+        352,
+        128
       ],
       "id": "bf0fcb5c-0937-45b4-8011-a7e6e8ffbd71",
       "name": "DadosNotion"
@@ -200,8 +212,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        380,
-        100
+        592,
+        128
       ],
       "id": "a0a48ae3-3217-4df1-8bd4-d4e3c24c797d",
       "name": "Edit Fields"
@@ -233,8 +245,8 @@
       "type": "n8n-nodes-base.notion",
       "typeVersion": 2.2,
       "position": [
-        440,
-        -1640
+        416,
+        -1888
       ],
       "id": "fd585141-9b01-4c62-9e57-e0e29a87ec6c",
       "name": "Get many database pages1",
@@ -272,8 +284,8 @@
       "type": "n8n-nodes-base.notion",
       "typeVersion": 2.2,
       "position": [
-        -80,
-        100
+        128,
+        128
       ],
       "id": "80df0a77-bf04-47ad-bc1b-70057ba6c8c4",
       "name": "Get many database pages",
@@ -287,13 +299,14 @@
     {
       "parameters": {
         "content": "## Workflow de envio de mensagem no whats diário confirmando reuniões",
-        "height": 580,
-        "width": 1140
+        "height": 708,
+        "width": 1588,
+        "color": 6
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
         -160,
-        -240
+        -224
       ],
       "typeVersion": 1,
       "id": "d10f1776-2f44-46a7-96c8-da7d766a4972",
@@ -304,14 +317,14 @@
         "promptType": "define",
         "text": "={{ $('Message').item.json.message }}",
         "options": {
-          "systemMessage": "=##Função\n \nVocê é um assistente de agendamento de reuniões da Hungaro Consultoria, uma empresa de planejamento financeiro.\nSua função é realizar agendamentos com objetividade. O usuário irá te informar o horário, o motivo para o agendamento e o e-mail para ser adicionado como convidado no agendamento.\nVocê deve iniciar a conversa com um Muito bom dia, boa tarde ou boa noite a depender do horário atual, além de chamar sempre o cliente pelo nome.\t\nSeguindo o padrão brasileiro de data e hora (DD/MM/AAAA e HH), opere no fuso horário \"America/Sao_Paulo\". hora atual: {{ $now }}\nNome do cliente:  {{ $('DadosGlobal').item.json.pushName }}\n\n \n## Documentos para envio\n*Os documentos devem ser enviados em formato PDF e CSV/Excel para o e-mail gabriel@hungaroconsultoria.com.br\nExtrato bancário das contas correntes\nFatura dos cartões de crédito\nLista de acontecimentos previstos para os próximos meses ainda não planejados.\n\nRegras:\n \n## Criar agendamento\n- Utilize a tool de \"Agendar\" create_event sempre que o usuário falar em \"Agendar\", \"agenda\", \"lembrar\", \"ligar\", \"conversar\", \"marcar\".\n- Crie um evento no Calendario do Google na data e hora solicitada pelo usuário, adicione seu e-mail como convidado no evento.\n \n## Consultar agendamento\n- Utilize a tool \"Consultar\" getall:event sempre que for solicitado para saber os agendamentos feitos.\n- Sempre que for fazer um novo agendamento confira as datas e horários nessa tool também.\n- Só retorne para o usuário os agendamentos que estão no Google Calendar, não utilize supostos agendamentos da memória, pois o usuário pode ter entrado no Google Calendar e removido o agendamento manualmente. Retorne os agendamentos por ordem de data e horário de início.\n \n## Deletar agendamento\n- Utilize a tool \"Deletar\" delete:event sempre que o usuário pedir para \"deletar\", \"excluir\", \"apagar\", \"cancelar\" um determinado evento.\n- Utilize a tool \"Consultar\" getall:event para achar o evento em questão para ser deletado.\n \n## Atualizar agendamento\n- Sempre que for solicitado para \"atualizar\", \"alterar\", \"mudar\", \"reagendar\", \"remarcar\" um determinado evento, utilize a tool \"Consultar\" getall:event para achar o evento em questão para ser atualizado, depois utilize a tool \"Deletar\" delete:event para deletar o evento e por último utilize a tool de \"Agendar\" create_event para criar um novo evento.\n\n\n## Horários disponíveis para agendamento\nAgende apenas nos seguintes horários:\nSegunda-feira: 8:00 as 18:00\nTerça-feira: 8:00 as 18:00\nQuarta-Feira: 8:00 as 18:00\nQuinta-Feira: 8:00 as 18:00\nSexta-feira: 8:00 as 18:00\nSábado: 8:00 as 12:00\nDomingo: nenhum horário disponível\n\n## Não envie o link do Google Calendar para o usuário.\n"
+          "systemMessage": "=##Função\n \nVocê é um assistente de agendamento de reuniões da Hungaro Consultoria, uma empresa de planejamento financeiro.\nSua função é realizar agendamentos com objetividade. O usuário irá te informar o horário, o motivo para o agendamento e o e-mail para ser adicionado como convidado no agendamento.\nAlém da sua função primária você também irá tirar dúvidas sobre o agendamento de reuniões, documentos necessários para que a reunião e formas do cliente pegar esses documentos em cada plataforma.\n\nVocê deve iniciar a conversa com um Muito bom dia, boa tarde ou boa noite a depender do horário atual, além de chamar sempre o cliente pelo nome.\t\nSeguindo o padrão brasileiro de data e hora (DD/MM/AAAA e HH), opere no fuso horário \"America/Sao_Paulo\". hora atual: {{ $now }}\nNome do cliente:  {{ $('DadosGlobal').item.json.pushName }}\n\n \n## Documentos para envio\n*Os documentos devem ser enviados em formato PDF e CSV/Excel para o e-mail gabriel@hungaroconsultoria.com.br\nExtrato bancário das contas correntes\nFatura dos cartões de crédito\nLista de acontecimentos previstos para os próximos meses ainda não planejados.\n\nRegras:\n \n## Criar agendamento\n- Utilize a tool de \"Agendar\" create_event sempre que o usuário falar em \"Agendar\", \"agenda\", \"lembrar\", \"ligar\", \"conversar\", \"marcar\".\n- MUITO IMPORTANTE: Ao usar a tool create_event, os parâmetros Start e End DEVEM estar no formato de data e hora completo ISO 8601, incluindo o fuso horário.\n- Formato Correto Exemplo: 2025-07-23T14:30:00-03:00\n- Formato Incorreto (NÃO USAR): 23/07/2025 14:30\n- A data e hora atual para sua referência é: {{ $now.toISO() }}. Use isso para calcular datas futuras corretamente.\n- Crie um evento no Calendário do Google na data e hora solicitada pelo usuário.\n \n## Consultar agendamento\n- Utilize a tool \"Consultar\" getall:event sempre que for solicitado para saber os agendamentos feitos.\n- Sempre que for fazer um novo agendamento confira as datas e horários nessa tool também.\n- Só retorne para o usuário os agendamentos que estão no Google Calendar, não utilize supostos agendamentos da memória, pois o usuário pode ter entrado no Google Calendar e removido o agendamento manualmente. Retorne os agendamentos por ordem de data e horário de início.\n \n## Deletar agendamento\n- Utilize a tool \"Deletar\" delete:event sempre que o usuário pedir para \"deletar\", \"excluir\", \"apagar\", \"cancelar\" um determinado evento.\n- Utilize a tool \"Consultar\" getall:event para achar o evento em questão para ser deletado.\n \n## Atualizar agendamento\n- Sempre que for solicitado para \"atualizar\", \"alterar\", \"mudar\", \"reagendar\", \"remarcar\" um determinado evento, utilize a tool \"Consultar\" getall:event para achar o evento em questão para ser atualizado, depois utilize a tool \"Deletar\" delete:event para deletar o evento e por último utilize a tool de \"Agendar\" create_event para criar um novo evento.\n\n\n## Horários disponíveis para agendamento\nAgende apenas nos seguintes horários:\nSegunda-feira: 8:00 as 18:00\nTerça-feira: 8:00 as 18:00\nQuarta-Feira: 8:00 as 18:00\nQuinta-Feira: 8:00 as 18:00\nSexta-feira: 8:00 as 18:00\nSábado: 8:00 as 12:00\nDomingo: nenhum horário disponível\n\n## Não envie o link do Google Calendar para o usuário.\n"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2,
       "position": [
-        4300,
-        -540
+        5088,
+        -640
       ],
       "id": "4907b99e-a380-4890-ace8-e44e50fb9b24",
       "name": "AI Agent"
@@ -325,8 +338,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        4180,
-        -320
+        4960,
+        -416
       ],
       "id": "0aa53e53-20e3-4bde-9d1f-c3fad254074a",
       "name": "Google Gemini Chat Model",
@@ -341,13 +354,16 @@
       "parameters": {
         "calendar": {
           "__rl": true,
-          "value": "qsbqq83ubi4kfbfip2lg0rm1s0@group.calendar.google.com",
+          "value": "c_7884974ab5a1eab27a106c4a78d7d6daf6c68570378b40d003382781ced7f9f4@group.calendar.google.com",
           "mode": "list",
-          "cachedResultName": "Análise"
+          "cachedResultName": "Teste - HC"
         },
         "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', `Data e horário escolhido pelo usuário`, 'string') }}",
         "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', `60 minutos após a data de início`, 'string') }}",
         "additionalFields": {
+          "attendees": [
+            "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('attendees0_Attendees', `O usuário enviará o e-mail para ser adicionado como convidado`, 'string') }}"
+          ],
           "description": "={{ $('DadosGlobal').item.json.chatId }}",
           "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', `O título deve conter omotivo do agendamento e o nome do cliente`, 'string') }}"
         }
@@ -355,15 +371,15 @@
       "type": "n8n-nodes-base.googleCalendarTool",
       "typeVersion": 1.3,
       "position": [
-        4520,
-        -320
+        5312,
+        -416
       ],
       "id": "894a76fa-3f46-4208-8c4b-b48a5d43c4dc",
       "name": "Agendar",
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "acz0rprIptJMajyf",
-          "name": "Google Calendar account 2"
+          "id": "Bct71lYLp9OoL4OX",
+          "name": "Google HC"
         }
       }
     },
@@ -372,9 +388,9 @@
         "operation": "getAll",
         "calendar": {
           "__rl": true,
-          "value": "qsbqq83ubi4kfbfip2lg0rm1s0@group.calendar.google.com",
+          "value": "c_7884974ab5a1eab27a106c4a78d7d6daf6c68570378b40d003382781ced7f9f4@group.calendar.google.com",
           "mode": "list",
-          "cachedResultName": "Análise"
+          "cachedResultName": "Teste - HC"
         },
         "returnAll": true,
         "timeMax": "={{ $now.plus({ week: 4 }) }}",
@@ -383,15 +399,15 @@
       "type": "n8n-nodes-base.googleCalendarTool",
       "typeVersion": 1.3,
       "position": [
-        4620,
-        -320
+        5408,
+        -416
       ],
       "id": "7517c6c5-ef8b-4a01-9589-d1ce95cd62d1",
       "name": "Consultar",
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "acz0rprIptJMajyf",
-          "name": "Google Calendar account 2"
+          "id": "Bct71lYLp9OoL4OX",
+          "name": "Google HC"
         }
       }
     },
@@ -400,9 +416,9 @@
         "operation": "delete",
         "calendar": {
           "__rl": true,
-          "value": "qsbqq83ubi4kfbfip2lg0rm1s0@group.calendar.google.com",
+          "value": "c_7884974ab5a1eab27a106c4a78d7d6daf6c68570378b40d003382781ced7f9f4@group.calendar.google.com",
           "mode": "list",
-          "cachedResultName": "Análise"
+          "cachedResultName": "Teste - HC"
         },
         "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', `Delete o evento solicitado.`, 'string') }}",
         "options": {}
@@ -410,15 +426,15 @@
       "type": "n8n-nodes-base.googleCalendarTool",
       "typeVersion": 1.3,
       "position": [
-        4740,
-        -320
+        5520,
+        -416
       ],
       "id": "d0d1b3f5-5e8c-4fa7-ba5b-7601f9b528f3",
       "name": "Deletar",
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "acz0rprIptJMajyf",
-          "name": "Google Calendar account 2"
+          "id": "Bct71lYLp9OoL4OX",
+          "name": "Google HC"
         }
       }
     },
@@ -426,7 +442,8 @@
       "parameters": {
         "content": "# Workflow de agente de agendamento de compromissos\n## Bloco de recebimento de mensagem no whats com switch para tratar texto e audio\n\nVídeo Aula Base:\nhttps://www.youtube.com/watch?v=oO-o1kEcZ10",
         "height": 540,
-        "width": 2140
+        "width": 2140,
+        "color": 6
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
@@ -455,35 +472,19 @@
     },
     {
       "parameters": {
-        "content": "# TO-DO\n- Adicionar verificação de há e-mail no evento da agenda, caso não haja buscar usuáruio no notion pelo telefone\n- Revisar envio de mensagem no whats de confirmação.\n",
-        "height": 580,
+        "content": "# TO-DO\n- Adicionar verificação de há e-mail no evento da agenda, caso não haja buscar usuáruio no notion pelo telefone\n- Revisar envio de mensagem no whats de confirmação. - OK\n",
+        "height": 708,
         "width": 380,
         "color": 3
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
         -560,
-        -240
+        -224
       ],
       "typeVersion": 1,
       "id": "ecf93f48-6656-4a5d-9c2c-023ddbab786b",
       "name": "Sticky Note3"
-    },
-    {
-      "parameters": {
-        "httpMethod": "POST",
-        "path": "webhookagendamento",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2,
-      "position": [
-        -60,
-        -660
-      ],
-      "id": "89706940-9ac1-4055-979f-c7fc7053abae",
-      "name": "WebhookAgendamento",
-      "webhookId": "3cfccf3e-4099-4a06-9c12-40bea5e94abb"
     },
     {
       "parameters": {
@@ -495,8 +496,8 @@
       "type": "@n8n/n8n-nodes-langchain.memoryRedisChat",
       "typeVersion": 1.5,
       "position": [
-        4420,
-        -680
+        5200,
+        -784
       ],
       "id": "81e8b5ff-e212-4e2c-9b9c-6199d66cacc6",
       "name": "Redis Chat Memory",
@@ -518,8 +519,8 @@
       "type": "n8n-nodes-evolution-api.evolutionApi",
       "typeVersion": 1,
       "position": [
-        4720,
-        -540
+        5984,
+        -640
       ],
       "id": "4e5f6604-691b-40eb-91e3-d091e2f62c1d",
       "name": "Marcar mensagens como lidas",
@@ -543,8 +544,8 @@
       "type": "n8n-nodes-evolution-api.evolutionApi",
       "typeVersion": 1,
       "position": [
-        4940,
-        -540
+        6208,
+        -640
       ],
       "id": "1f8fd205-5d30-435c-b484-cc876f657c42",
       "name": "Enviar texto",
@@ -564,7 +565,7 @@
       "type": "n8n-nodes-base.stickyNote",
       "position": [
         -560,
-        -1340
+        -1344
       ],
       "typeVersion": 1,
       "id": "d7ced057-ebec-40a9-b00c-ae3fd1a6e9bb",
@@ -599,8 +600,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        2100,
-        -660
+        2064,
+        -656
       ],
       "id": "b22569f1-d4b4-4bf0-9cdf-658dc4444733",
       "name": "fromMe"
@@ -616,8 +617,8 @@
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        2540,
-        -740
+        2496,
+        -736
       ],
       "id": "0d8ad7d2-af55-4c2d-9de3-5ffcadd3cb37",
       "name": "ChaveBlock",
@@ -638,7 +639,7 @@
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        2780,
+        2736,
         -560
       ],
       "id": "17e99677-c9f6-4133-8083-56b5aa9eedca",
@@ -679,7 +680,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        3000,
+        2960,
         -560
       ],
       "id": "81f3fa0a-d3a8-4d85-b497-945741b4e163",
@@ -690,8 +691,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        680,
-        -1420
+        656,
+        -1664
       ],
       "id": "1be7a30b-1143-4ec9-9513-80172b6e8c6d",
       "name": "No Operation, do nothing2"
@@ -713,29 +714,11 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        200,
-        -1420
+        176,
+        -1664
       ],
       "id": "25ed99af-d0b5-4eb0-bbc5-b4a76df7de26",
       "name": "Edit Fields3"
-    },
-    {
-      "parameters": {
-        "fieldsToAggregate": {
-          "fieldToAggregate": [
-            {}
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.aggregate",
-      "typeVersion": 1,
-      "position": [
-        1360,
-        -1240
-      ],
-      "id": "aaec11eb-2f14-4f98-bc36-6afed1d2644b",
-      "name": "Aggregate"
     },
     {
       "parameters": {
@@ -793,8 +776,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        660,
-        -660
+        672,
+        -656
       ],
       "id": "a0d0393e-4a43-41fd-9b8e-90fcae9d75c9",
       "name": "text/audio Evo"
@@ -816,34 +799,11 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1220,
-        -740
+        1232,
+        -736
       ],
       "id": "edd0a957-005f-4f5f-acce-a8ffdc0cf926",
       "name": "Set Text Message Evo"
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "e4c4e610-7527-4660-aa85-670078d5dcbc",
-              "name": "message",
-              "value": "={{ $json.message }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        1840,
-        -660
-      ],
-      "id": "5254a78f-fc92-48e1-93c1-ba9bba81c7b2",
-      "name": "Message"
     },
     {
       "parameters": {
@@ -916,8 +876,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        440,
-        -660
+        448,
+        -656
       ],
       "id": "c0de5eae-5f00-4376-ac41-74c86444d520",
       "name": "DadosGlobal"
@@ -927,7 +887,7 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        2560,
+        2512,
         -560
       ],
       "id": "d516902f-12a4-4e2d-9b75-912ce1065104",
@@ -944,7 +904,7 @@
       "typeVersion": 1,
       "position": [
         960,
-        -580
+        -576
       ],
       "id": "8b109e0a-1149-4c9a-9e06-a677bb08b5f1",
       "name": "Obter m dia em base64",
@@ -966,8 +926,8 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        1140,
-        -580
+        1152,
+        -576
       ],
       "id": "82fde98d-5dd1-4b05-9faf-ef7545e54409",
       "name": "Convert to File"
@@ -1010,8 +970,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1320,
-        -580
+        1328,
+        -576
       ],
       "id": "126067f9-d5ba-4c31-8775-2903b05e7397",
       "name": "HTTP Request1",
@@ -1039,8 +999,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1480,
-        -580
+        1488,
+        -576
       ],
       "id": "ae72b7b1-71d0-4b48-99b7-fdc338fae96f",
       "name": "Set Audio Message"
@@ -1052,7 +1012,7 @@
           "messageValues": [
             {
               "type": "ai",
-              "message": "={{ $('Message').item.json.message }}"
+              "message": "={{ $('ConvertedMessage').item.json.message }}"
             }
           ]
         }
@@ -1060,8 +1020,8 @@
       "type": "@n8n/n8n-nodes-langchain.memoryManager",
       "typeVersion": 1.1,
       "position": [
-        2760,
-        -980
+        2720,
+        -976
       ],
       "id": "02493bd9-b8a7-4244-8c7f-6613c990341c",
       "name": "Salva Chat Admin"
@@ -1073,7 +1033,7 @@
           "messageValues": [
             {
               "type": "user",
-              "message": "={{ $('Message').item.json.message }}"
+              "message": "={{ $('ConvertedMessage').item.json.message }}"
             }
           ]
         }
@@ -1081,8 +1041,8 @@
       "type": "@n8n/n8n-nodes-langchain.memoryManager",
       "typeVersion": 1.1,
       "position": [
-        3360,
-        -980
+        3152,
+        -976
       ],
       "id": "05d8fe27-6577-4ddd-92e8-5c086b3de092",
       "name": "Salva Chat User"
@@ -1091,12 +1051,13 @@
       "parameters": {
         "content": "# Bloqueio de Agente com interação humana\n",
         "height": 840,
-        "width": 1460
+        "width": 1556,
+        "color": 6
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        2060,
-        -1100
+        2016,
+        -1104
       ],
       "typeVersion": 1,
       "id": "51e11a29-a00d-4783-895b-71fd1b4b747b",
@@ -1107,11 +1068,369 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        3440,
-        -440
+        3408,
+        -544
       ],
       "id": "a041a6f6-056c-4418-88d5-aabafdc21427",
       "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "operation": "push",
+        "list": "={{ $('DadosGlobal').item.json.session }}_{{ $('DadosGlobal').item.json.chatId }}_temp",
+        "messageData": "={{ $('ConvertedMessage').item.json.message }}",
+        "tail": true
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        3632,
+        -544
+      ],
+      "id": "7e81bd4d-ffaa-43cb-a1b7-7855ff8db1b6",
+      "name": "Redis1",
+      "credentials": {
+        "redis": {
+          "id": "XetUh92CLURSvWMJ",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        3856,
+        -544
+      ],
+      "id": "ee3c1e60-422c-498c-98b0-ebfda04e553a",
+      "name": "Wait",
+      "webhookId": "04b8b765-ebb0-44f7-8d33-0ae4fcbe1db3"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "messages",
+        "key": "={{ $('DadosGlobal').item.json.session }}_{{ $('DadosGlobal').item.json.chatId }}_temp",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        4080,
+        -544
+      ],
+      "id": "c24cae4c-23eb-4d2b-b824-ac43a439acdb",
+      "name": "Redis2",
+      "credentials": {
+        "redis": {
+          "id": "XetUh92CLURSvWMJ",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c74425f5-c8d3-41d3-8568-5480d6e601eb",
+              "leftValue": "={{ $json.messages.last() }}",
+              "rightValue": "={{ $('ConvertedMessage').item.json.message }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        4288,
+        -544
+      ],
+      "id": "570e78f3-76c2-4996-8f11-9b0585edf29e",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "key": "={{ $('DadosGlobal').item.json.session }}_{{ $('DadosGlobal').item.json.chatId }}_temp"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        4512,
+        -640
+      ],
+      "id": "df2be02e-542e-4242-89ac-24f6a9f1f760",
+      "name": "Redis3",
+      "credentials": {
+        "redis": {
+          "id": "XetUh92CLURSvWMJ",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e4c4e610-7527-4660-aa85-670078d5dcbc",
+              "name": "message",
+              "value": "={{ $json.message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1840,
+        -656
+      ],
+      "id": "5254a78f-fc92-48e1-93c1-ba9bba81c7b2",
+      "name": "ConvertedMessage"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "501ce864-6fca-40f9-957f-cee1c4b93de6",
+              "name": "message",
+              "value": "={{ $('Redis2').item.json.messages.join(\" \") }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4736,
+        -640
+      ],
+      "id": "2546a39d-60bb-42c3-80b8-0b1a33e35b44",
+      "name": "Message"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.0-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.0-flash"
+        },
+        "inputType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        1328,
+        -400
+      ],
+      "id": "63290819-4024-4ccb-94d1-ef40a67da730",
+      "name": "Transcricao de Audio",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "nJopBduo6R0Rmkvt",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -64
+      ],
+      "id": "fc2b6811-4fd3-401b-a449-42de3821a88e",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "151df444-7823-4646-963b-0350a8764127",
+              "name": "daysToConfirm",
+              "value": 1,
+              "type": "number"
+            },
+            {
+              "id": "ccca0d45-c52d-482e-abb5-0625b78f4abf",
+              "name": "evolutionInstance",
+              "value": "Agente_Agendamento_HC",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        -128
+      ],
+      "id": "1d4ba119-e790-460a-b241-d40f53254995",
+      "name": "ConfirmGlobal"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "={{ $('ConfirmGlobal').item.json.evolutionInstance }}",
+        "remoteJid": "={{ $('DadosNotion').item.json.clientePhone }}",
+        "messageText": "={{ $json.output }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1184,
+        128
+      ],
+      "id": "7a28634f-e86e-4b80-8ce4-7409db7a2080",
+      "name": "Enviar texto1",
+      "credentials": {
+        "evolutionApi": {
+          "id": "j5AbWpMg04wmHEJE",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Nome do Cliente: {{ $('DadosNotion').item.json.clienteName }}\nHora Atual: {{ $now }}\nData da Reunião: {{ $('DadosAgenda').item.json.dataReuniao }}\nDia da Semana: {{ $('DadosAgenda').item.json.diaSemana }}\nHora de Início: {{ $('DadosAgenda').item.json.horaInicio }}\nHora de Fim: {{ $('DadosAgenda').item.json.horaFim }}\nNome do Evento: {{ $('DadosAgenda').item.json.nomeCompromisso }} (caso tenha o nome do cliente retirar do nome do evento)",
+        "options": {
+          "systemMessage": "=##Função\n\nVocê é um assistente de agendamento de reuniões da Hungaro Consultoria, uma empresa de planejamento financeiro.\n\nSua primeira função é enviar mensagem de confirmação de reuniões e lembrar os clientes de enviarem os documentos e informações necessárias para a próxima reunião até data específica.\n\nAlém da função primária você também irá tirar dúvidas sobre o agendamento de reuniões, documentos necessários para que a reunião aconteça da melhor forma.\n\nVocê deve iniciar a conversa com um Muito bom dia, boa tarde ou boa noite a depender do horário atual, além de chamar sempre o cliente pelo nome.\t\nSeguindo o padrão brasileiro de data e hora (DD/MM/AAAA e HH), opere no fuso horário \"America/Sao_Paulo\". \n\nHora atual: {{ $now }}\nNome do cliente:  {{ $('DadosNotion').item.json.clienteName }}\n\n## Documentos Necessários para Reunião\n- Extratos bancários das contas correntes\n- Faturas dos cartões de crédito\n- Lista de acontecimentos previstos para os próximos meses, como aniversário, eventos, viagens, datas comemorativas, renovações de assinaturas ou serviços...\n\n*Os documentos devem ser enviados em formato PDF e CSV/Excel para o e-mail {{ $('DadosNotion').item.json.consultorEmail }}\n\n##Regras\n\n- Use o exemplo a baixo para ter um guia de como montar a mensagem.\n- Os valores da mensagem de exemplo que estão entre [] devem ser substituídos pelas variáveis definidas no promp de user message\n\n##Exemplo de mensagem\nMuuuuito bom dia, [Nome do Cliente], tudo bem?\n\nGostaria de confirmar nossa próxima reunião de [Nome do Evento] agendada para *[Dia da Semana] - [Data da Reunião] às [Hora de Início]*. Para que possamos otimizar nosso tempo e que seu planejamento financeiro seja o mais completo possível, peço que, por gentileza, encaminhe os seguintes documentos até *[Data da reunião - 2 dias úteis] às 10h*:\n\n📌 *Extrato bancário* da data da nossa última reunião até hoje.\n\n📌 *Faturas de cartão de crédito* do mesmo período.\n\n📌 *Lista de acontecimentos previstos para os próximos meses ainda não planejados.*\n\nPor favor, envie os arquivos nos formatos *PDF* e também em *CSV ou Excel*.\n\nPode fazer o envio através desse e-mail: gabriel@hungaroconsultoria.com.br\n\nCaso tenha alguma dúvida ou precise de qualquer esclarecimento, estou à disposição.\n\nAguardo seu retorno e nos vemos em breve!\n\nAtenciosamente,\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        800,
+        128
+      ],
+      "id": "40261ba9-1cbc-4020-921e-1d08fbe4a08f",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        800,
+        304
+      ],
+      "id": "50ce9fcd-b02a-4619-8f06-714a2ee795aa",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "nJopBduo6R0Rmkvt",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# Buffer de mensagens\n",
+        "height": 840,
+        "width": 1268,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3600,
+        -1104
+      ],
+      "typeVersion": 1,
+      "id": "6914ffb7-11d5-4771-896d-29edcff27565",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        4496,
+        -448
+      ],
+      "id": "cb7ad475-d317-4f6b-aa8b-5f4eb2436cf3",
+      "name": "No Operation, do nothing1"
+    },
+    {
+      "parameters": {
+        "content": "# Agente de Agendamento",
+        "height": 840,
+        "width": 740,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4896,
+        -1104
+      ],
+      "typeVersion": 1,
+      "id": "fb1f2ddd-c176-415d-8350-5dbdff85451d",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "# WhatsApp API",
+        "height": 840,
+        "width": 740,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5664,
+        -1104
+      ],
+      "typeVersion": 1,
+      "id": "2fe96cd4-3601-46b1-ba9e-df949250dfeb",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webhookagendamento",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -64,
+        -656
+      ],
+      "id": "89706940-9ac1-4055-979f-c7fc7053abae",
+      "name": "WebhookAgendamento",
+      "webhookId": "3cfccf3e-4099-4a06-9c12-40bea5e94abb"
     }
   ],
   "pinData": {},
@@ -1120,7 +1439,7 @@
       "main": [
         [
           {
-            "node": "Code",
+            "node": "ConfirmGlobal",
             "type": "main",
             "index": 0
           }
@@ -1186,7 +1505,7 @@
       "main": [
         [
           {
-            "node": "HTTP Request",
+            "node": "AI Agent1",
             "type": "main",
             "index": 0
           }
@@ -1253,17 +1572,6 @@
         [
           {
             "node": "Marcar mensagens como lidas",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "WebhookAgendamento": {
-      "main": [
-        [
-          {
-            "node": "DadosGlobal",
             "type": "main",
             "index": 0
           }
@@ -1393,18 +1701,7 @@
       "main": [
         [
           {
-            "node": "Message",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Message": {
-      "main": [
-        [
-          {
-            "node": "fromMe",
+            "node": "ConvertedMessage",
             "type": "main",
             "index": 0
           }
@@ -1470,7 +1767,7 @@
       "main": [
         [
           {
-            "node": "Message",
+            "node": "ConvertedMessage",
             "type": "main",
             "index": 0
           }
@@ -1481,7 +1778,151 @@
       "main": [
         [
           {
+            "node": "Redis1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis1": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Redis2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis2": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Redis3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis3": {
+      "main": [
+        [
+          {
+            "node": "Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ConvertedMessage": {
+      "main": [
+        [
+          {
+            "node": "fromMe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message": {
+      "main": [
+        [
+          {
             "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcricao de Audio": {
+      "main": [
+        []
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "ConfirmGlobal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ConfirmGlobal": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Enviar texto1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WebhookAgendamento": {
+      "main": [
+        [
+          {
+            "node": "DadosGlobal",
             "type": "main",
             "index": 0
           }
@@ -1493,7 +1934,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "376b4bfb-17b6-4181-9fc3-24179a3bfc7a",
+  "versionId": "2188d1a0-1ac1-4905-b621-09f9435dc8ed",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "c639fe7ebeb422477546545535913c1fe6d467efc75f0ba65b23a5e5a0935928"
