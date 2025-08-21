@@ -15,7 +15,7 @@
       "typeVersion": 1.2,
       "position": [
         0,
-        0
+        -320
       ],
       "id": "857d7f25-9acc-491d-b21d-1bf35a48d7ce",
       "name": "Schedule Trigger"
@@ -28,7 +28,7 @@
       "typeVersion": 2,
       "position": [
         432,
-        48
+        -272
       ],
       "id": "153e756e-d71b-4202-b04d-6eacb5aebed2",
       "name": "Code"
@@ -39,7 +39,7 @@
       "typeVersion": 1,
       "position": [
         0,
-        112
+        -208
       ],
       "id": "be4db41e-30d5-4da7-9f78-82ff5f993d7a",
       "name": "When clicking ‘Execute workflow’"
@@ -77,6 +77,12 @@
               "name": "managerEmail",
               "value": "gabriel@hungaroconsultoria.com.br",
               "type": "string"
+            },
+            {
+              "id": "44739521-af34-4f71-bec3-3320d3a7cd90",
+              "name": "clientBase",
+              "value": "Notion",
+              "type": "string"
             }
           ]
         },
@@ -86,7 +92,7 @@
       "typeVersion": 3.4,
       "position": [
         288,
-        48
+        -272
       ],
       "id": "9ee64f38-af1f-4696-bceb-49b72089c046",
       "name": "ConfirmGlobal"
@@ -94,7 +100,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Nome do Cliente: {{ $('Unify All Data').item.json.clienteName }} (considerar apenas primeiro nome)\nApelido: {{ $('Unify All Data').item.json.clienteNick }}\nHora Atual: {{ $now }}\nData da Reunião: {{ $('MeetVariables').item.json.dataReuniao }}\nDia da Semana: {{ $('MeetVariables').item.json.diaSemana }}\nHora de Início: {{ $('MeetVariables').item.json.horaInicio }}\nHora de Fim: {{ $('MeetVariables').item.json.horaFim }}\nNome do Evento: {{ $('MeetVariables').item.json.nomeCompromisso }} (Geralmente o evento vem com nome no formato: [Nome do Evento - Nome do Cliente] caso tenha o nome do cliente retirar do nome do evento)",
+        "text": "=Nome do Cliente: {{ $('Unify All Data').item.json.clienteName }} (considerar apenas primeiro nome)\nApelido: {{ $('Unify All Data').item.json.clienteNick }}\nHora Atual: {{ $now }}\nData da Reunião: {{ $('Unify All Data').item.json.dataReuniao }}\nDia da Semana: {{ $('Unify All Data').item.json.diaSemana }}\nHora de Início: {{ $('Unify All Data').item.json.horaInicio }}\nHora de Fim: {{ $('Unify All Data').item.json.horaFim }}\nNome do Evento: {{ $('Unify All Data').item.json.nomeCompromisso }} (Geralmente o evento vem com nome no formato: [Nome do Evento - Nome do Cliente] caso tenha o nome do cliente retirar do nome do evento)",
         "options": {
           "systemMessage": "=##Função\n\nVocê é um assistente de agendamento de reuniões da Hungaro Consultoria, uma empresa de planejamento financeiro.\n\nSua primeira função é enviar mensagem de confirmação de reuniões e lembrar os clientes de enviarem os documentos e informações necessárias para a próxima reunião até data específica.\n\nAlém da função primária você também irá tirar dúvidas sobre o agendamento de reuniões, documentos necessários para que a reunião aconteça da melhor forma.\n\nVocê deve iniciar a conversa com um Muito bom dia, boa tarde ou boa noite a depender do horário atual, além de chamar sempre o cliente pelo nome.\t\nSeguindo o padrão brasileiro de data e hora (DD/MM/AAAA e HH), opere no fuso horário \"America/Sao_Paulo\". \n\nHora atual: {{ $now }}\nNome do cliente:  Caso a variável Apelido tenha sido preenchida usar ela como Nome do Cliente, caso contrário, use a variável Nome do Cliente.\n\n## Documentos Necessários para Reunião\n- Extratos bancários das contas correntes;\n- Faturas dos cartões de crédito;\n- Lista de acontecimentos previstos para os próximos meses, como aniversário, eventos, viagens, datas comemorativas, renovações de assinaturas ou serviços...\n\n*Os documentos devem ser enviados em formato PDF e CSV/Excel para o e-mail {{ $('Unify All Data').item.json.consultantEmail }}\n\n##Regras\n\n- Use o exemplo a baixo para ter um guia de como montar a mensagem.\n- Os valores da mensagem de exemplo que estão entre [] devem ser substituídos pelas variáveis definidas no promp de user message\n\n##Exemplo de mensagem\nMuuuuito bom dia, [Nome do Cliente], tudo bem?\n\nGostaria de confirmar nossa próxima reunião de [Nome do Evento] agendada para *[Dia da Semana] - [Data da Reunião] às [Hora de Início]*. Para que possamos otimizar nosso tempo e que seu planejamento financeiro seja o mais completo possível, peço que, por gentileza, encaminhe os seguintes documentos até *[Data da reunião - 2 dias úteis] às 10h*:\n\n📌 *Extrato bancário* da data da nossa última reunião até hoje.\n\n📌 *Faturas de cartão de crédito* do mesmo período.\n\n📌 *Lista de acontecimentos previstos para os próximos meses ainda não planejados.*\n\nPor favor, envie os arquivos nos formatos *PDF* e também em *CSV ou Excel*.\n\nPode fazer o envio através desse e-mail: gabriel@hungaroconsultoria.com.br\n\nCaso tenha alguma dúvida ou precise de qualquer esclarecimento, estou à disposição.\n\nAguardo seu retorno e nos vemos em breve!\n\nComo ainda estou em fase de desenvolvimento peço que retorne o contato com o Gabriel:\nhttps://api.whatsapp.com/send?phone=5511989214740\n\nAtenciosamente, {{ $('MeetVariables').item.json.botName }}.\n\n"
         }
@@ -102,8 +108,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.1,
       "position": [
-        1936,
-        304
+        3168,
+        208
       ],
       "id": "111e0a67-08ef-4c14-a735-e594459dfd69",
       "name": "AI Agent1"
@@ -116,8 +122,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        1936,
-        480
+        3168,
+        384
       ],
       "id": "52806437-1e6e-4743-a70f-82987cfac8fe",
       "name": "Google Gemini Chat Model1",
@@ -157,7 +163,7 @@
       "typeVersion": 2.2,
       "position": [
         864,
-        48
+        -272
       ],
       "id": "cdd361a2-56a7-47ae-8b94-125751fede72",
       "name": "If"
@@ -167,9 +173,9 @@
         "operation": "getAll",
         "calendar": {
           "__rl": true,
-          "value": "c_7884974ab5a1eab27a106c4a78d7d6daf6c68570378b40d003382781ced7f9f4@group.calendar.google.com",
+          "value": "c_dba7b64ba03811cf4ca158de25fa67cde30121350c64bb36cf1d2dc798750900@group.calendar.google.com",
           "mode": "list",
-          "cachedResultName": "Teste - HC"
+          "cachedResultName": "HC - Compromisso"
         },
         "returnAll": true,
         "timeMin": "={{ $json.startDate }}",
@@ -180,7 +186,7 @@
       "typeVersion": 1.3,
       "position": [
         656,
-        48
+        -272
       ],
       "id": "ea448fc2-0589-45ce-ae3e-a1541315829f",
       "name": "ConsultaAgenda",
@@ -198,8 +204,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1200,
-        32
+        1168,
+        -16
       ],
       "id": "decd3896-cb75-487c-9a6b-c57c31e4beca",
       "name": "MeetVariables"
@@ -214,7 +220,7 @@
       "typeVersion": 2,
       "position": [
         0,
-        -256
+        -848
       ],
       "id": "f99c5e57-5b49-47e1-b1b6-b5ba2c0f3198",
       "name": "Webhook",
@@ -222,13 +228,13 @@
     },
     {
       "parameters": {
-        "jsCode": "// Carrega TODAS as listas de dados de que precisamos.\n// $items() é a função correta para pegar todos os resultados de um nó.\nconst allEvents = $items(\"MeetVariables\");\nconst allClients = $items(\"SearchClient\");\nconst allConsultants = $items(\"SearchConsultant\");\n\nconst finalItems = [];\n\n// O loop principal DEVE ser sobre a lista de \"tarefas\", que é a lista de convidados/eventos.\nfor (const eventItem of allEvents) {\n  const dadosEvento = eventItem.json;\n  const attendeeEmail = dadosEvento.attendeeEmail;\n\n  // 1. Para este evento/convidado, encontre o registro do cliente correspondente.\n  const clientItem = allClients.find(c => c.json.property_e_mail === attendeeEmail);\n\n  // Se não encontrarmos o cliente na nossa base, não podemos continuar.\n  if (!clientItem) {\n    // console.log(`Cliente com email ${attendeeEmail} não encontrado.`);\n    continue;\n  }\n  const dadosCliente = clientItem.json;\n\n  // 2. Agora que temos o cliente, pegue o ID do consultor responsável por ele.\n  const consultantId = dadosCliente.property_responsible_consultant ? dadosCliente.property_responsible_consultant[0] : null;\n\n  // Se o cliente não tiver um consultor, não podemos continuar.\n  if (!consultantId) {\n    // console.log(`Cliente ${dadosCliente.name} não tem consultor responsável.`);\n    continue;\n  }\n\n  // 3. Com o ID do consultor, encontre os detalhes completos do consultor.\n  const consultantItem = allConsultants.find(c => c.json.id === consultantId);\n\n  // Se, por algum motivo, não encontrarmos os detalhes do consultor, não continue.\n  if (!consultantItem) {\n    // console.log(`Detalhes do consultor com ID ${consultantId} não encontrados.`);\n    continue;\n  }\n  const dadosConsultor = consultantItem.json;\n\n  // 4. SUCESSO! Encontramos todas as partes. Montamos o objeto final.\n  finalItems.push({\n    json: {\n      // --- DADOS DO CONSULTOR ---\n      consultantName: dadosConsultor.property_name,\n      consultantPhone: dadosConsultor.property_phone,\n      consultantEmail: dadosConsultor.property_email,\n\n      // --- DADOS DO CLIENTE ---\n      clienteName: dadosCliente.name,\n      clienteEmail: dadosCliente.property_e_mail,\n      clientePhone: dadosCliente.property_telefone,\n      clienteChatId: dadosCliente.property_telefone ? dadosCliente.property_telefone.replace(/\\D/g, '') + '@s.whatsapp.net' : '',\n      clienteNick: dadosCliente.property_apelido_razao_social,\n\n      // --- DADOS DO EVENTO ---\n      nomeCompromisso: dadosEvento.nomeCompromisso,\n      dataReuniao: dadosEvento.dataReuniao,\n      diaSemana: dadosEvento.diaSemana,\n      horaInicio: dadosEvento.horaInicio,\n      horaFim: dadosEvento.horaFim,\n      dataReuniaoISO: dadosEvento.dataReuniaoISO,\n    }\n  });\n}\n\n// Retorna a lista final com todos os itens corretamente combinados.\nreturn finalItems;\n"
+        "jsCode": "// Carrega TODAS as listas de dados de que precisamos.\n// $items() é a função correta para pegar todos os resultados de um nó.\nconst allEvents = $items(\"MeetVariables\");\nconst allClients = $items(\"SearchClient\");\nconst allConsultants = $items(\"SearchConsultant\");\n\nconst finalItems = [];\n\n// O loop principal DEVE ser sobre a lista de \"tarefas\", que é a lista de convidados/eventos.\nfor (const eventItem of allEvents) {\n  const dadosEvento = eventItem.json;\n  const attendeeEmail = dadosEvento.attendeeEmail;\n\n  // 1. Para este evento/convidado, encontre o registro do cliente correspondente.\n  const clientItem = allClients.find(c => c.json.property_e_mail === attendeeEmail);\n\n  // Se não encontrarmos o cliente na nossa base, não podemos continuar.\n  if (!clientItem) {\n    // console.log(`Cliente com email ${attendeeEmail} não encontrado.`);\n    continue;\n  }\n  const dadosCliente = clientItem.json;\n\n  // 2. Agora que temos o cliente, pegue o ID do consultor responsável por ele.\n  const consultantId = dadosCliente.property_responsible_consultant ? dadosCliente.property_responsible_consultant[0] : null;\n\n  // Se o cliente não tiver um consultor, não podemos continuar.\n  if (!consultantId) {\n    // console.log(`Cliente ${dadosCliente.name} não tem consultor responsável.`);\n    continue;\n  }\n\n  // 3. Com o ID do consultor, encontre os detalhes completos do consultor.\n  const consultantItem = allConsultants.find(c => c.json.id === consultantId);\n\n  // Se, por algum motivo, não encontrarmos os detalhes do consultor, não continue.\n  if (!consultantItem) {\n    // console.log(`Detalhes do consultor com ID ${consultantId} não encontrados.`);\n    continue;\n  }\n  const dadosConsultor = consultantItem.json;\n\n  // 4. SUCESSO! Encontramos todas as partes. Montamos o objeto final.\n  finalItems.push({\n    json: {\n      // --- DADOS DO CONSULTOR ---\n      consultantName: dadosConsultor.property_name,\n      consultantPhone: dadosConsultor.property_phone,\n      consultantEmail: dadosConsultor.property_email,\n\n      // --- DADOS DO CLIENTE ---\n      clienteName: dadosCliente.name,\n      clienteEmail: dadosCliente.property_e_mail,\n      clientePhone: dadosCliente.property_telefone,\n      clienteChatId: dadosCliente.property_telefone ? dadosCliente.property_telefone.replace(/\\D/g, '') + '@s.whatsapp.net' : '',\n      clienteNick: dadosCliente.property_apelido_razao_social,\n\n      // --- DADOS DO EVENTO ---\n      nomeCompromisso: dadosEvento.nomeCompromisso,\n      dataReuniao: dadosEvento.dataReuniao,\n      diaSemana: dadosEvento.diaSemana,\n      horaInicio: dadosEvento.horaInicio,\n      horaFim: dadosEvento.horaFim,\n      dataReuniaoISO: dadosEvento.dataReuniaoISO,\n    }\n  });\n}\n\n// Retorna a lista final com todos os itens corretamente combinados.\nreturn finalItems;"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1152,
-        320
+        2272,
+        224
       ],
       "id": "78f2cafb-eb11-48eb-8ebe-3418c981e33c",
       "name": "Unify All Data"
@@ -260,18 +266,18 @@
       "type": "n8n-nodes-base.notion",
       "typeVersion": 2.2,
       "position": [
-        224,
-        336
+        256,
+        256
       ],
       "id": "e844f8da-28a8-413c-8332-4c6c1394d1ea",
       "name": "SearchClient",
+      "alwaysOutputData": false,
       "credentials": {
         "notionApi": {
           "id": "D1pXvNxNoBaVi0WB",
           "name": "Notion account"
         }
-      },
-      "onError": "continueErrorOutput"
+      }
     },
     {
       "parameters": {
@@ -286,8 +292,8 @@
       "type": "n8n-nodes-base.notion",
       "typeVersion": 2.2,
       "position": [
-        608,
-        320
+        1872,
+        224
       ],
       "id": "1aa66ecf-423e-4f8e-ba0c-a0c8cf7015fa",
       "name": "SearchConsultant",
@@ -305,7 +311,7 @@
             {
               "id": "6cf73de9-3164-4400-ad3b-5b094c48bced",
               "name": "alertMessage",
-              "value": "=Olá, {{ $json.consultantName }}. \nO sistema tentou enviar um lembrete de reunião para o cliente *\"{{ $json.clienteName }}\"* (email: {{ $json.clienteEmail }}), mas o cadastro dele está sem número de telefone. Por favor, atualize o Notion para garantir os próximos envios.\n\nPor favor, atualize o cadastro clicando no link abaixo:\n{{ $('SearchClient').item.json.url }}",
+              "value": "=Olá, {{ $json.consultantName }}. \nO sistema tentou enviar um lembrete de reunião para o cliente *\"{{ $json.clienteName }}\"* (email: {{ $json.clienteEmail }}), mas o cadastro dele está sem número de telefone. Por favor, atualize a base de clientes no [{{ $items(\"ConfirmGlobal\")[0].json.clientBase }}] para garantir os próximos envios.\n\nPor favor, atualize o cadastro clicando no link abaixo:\n{{ $('SearchClient').item.json.url }}\n",
               "type": "string"
             }
           ]
@@ -316,8 +322,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1936,
-        704
+        3424,
+        560
       ],
       "id": "248140a2-7e1f-44ab-81a6-4fd6816b0b66",
       "name": "Build Consultant Alert"
@@ -333,8 +339,8 @@
       "type": "n8n-nodes-evolution-api.evolutionApi",
       "typeVersion": 1,
       "position": [
-        2144,
-        704
+        3632,
+        560
       ],
       "id": "5a6145f8-a484-416b-a4a8-f5a40a88c813",
       "name": "Send Alert to Consultant",
@@ -373,8 +379,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1360,
-        320
+        2864,
+        224
       ],
       "id": "3dd253b3-a716-43c1-954b-01583bc09e3a",
       "name": "ClientPhoneVerify"
@@ -390,11 +396,546 @@
       "type": "n8n-nodes-evolution-api.evolutionApi",
       "typeVersion": 1,
       "position": [
-        2320,
-        304
+        3552,
+        208
       ],
       "id": "11ca3e44-180a-4a0e-9930-25ab91a205e4",
       "name": "SendConfirmMessage",
+      "credentials": {
+        "evolutionApi": {
+          "id": "j5AbWpMg04wmHEJE",
+          "name": "Evolution account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "98617aaa-ef57-4b34-8b51-f9c95b1bd68d",
+              "name": "managerAlert",
+              "value": "=ALERTA: O compromisso \"{{ $json.summary }}\" agendado para {{ DateTime.fromISO($json.start.dateTime).setZone('America/Sao_Paulo').toFormat('dd/MM \\'às\\' HH:mm') }} não possui nenhum convidado (e-mail) associado. Não foi possível enviar o lembrete.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        256,
+        -16
+      ],
+      "id": "7fd7353c-7d0f-4bca-a78b-017aa9d03e8f",
+      "name": "Build No Attendee Alert"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "={{ $('ConfirmGlobal').item.json.evolutionInstance }}",
+        "remoteJid": "={{ $('ConfirmGlobal').item.json.managerPhone }}@s.whatsapp.net",
+        "messageText": "={{ $json.managerAlert }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        528,
+        -16
+      ],
+      "id": "5a30be4c-9307-4cb9-aa8d-5efc9cff92cc",
+      "name": "Send No Attendee Alert",
+      "credentials": {
+        "evolutionApi": {
+          "id": "j5AbWpMg04wmHEJE",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "841719a7-4e70-434b-a840-28be6ae5d971",
+              "name": "managerAlert",
+              "value": "=ALERTA: Um lembrete de reunião foi agendado com um convidado que não está na base de clientes no [{{ $items(\"ConfirmGlobal\")[0].json.clientBase }}].\n\nDados do Evento:\n- Nome: {{ $json.eventData.nomeCompromisso }}\n- Data: {{ $json.eventData.diaSemana }} - {{ $json.eventData.dataReuniao }}\n- Horário: {{ $json.eventData.horaInicio }}\n- E-mail do Convidado: {{ $json.eventData.attendeeEmail }}\n\nPor favor, cadastre o cliente. Link para a base: https://www.notion.so/bf1094d6c997456f82ebcd30352c85c3\n",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        960,
+        432
+      ],
+      "id": "774c2320-16d7-4161-af3f-578d2d82baa9",
+      "name": "Build Not Found Alert"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "={{ $json.globalData.evolutionInstance }}",
+        "remoteJid": "={{ $json.globalData.managerPhone }}@s.whatsapp.net",
+        "messageText": "={{ $json.managerAlert }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        432
+      ],
+      "id": "caf5fdeb-8a96-44a6-beb7-646207fd7415",
+      "name": "Send Not Found Alert",
+      "credentials": {
+        "evolutionApi": {
+          "id": "j5AbWpMg04wmHEJE",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4cac7107-8078-4cd0-bcd9-c28df424cc47",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "found",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        720,
+        256
+      ],
+      "id": "27b82d1f-9249-4394-92eb-086c742127b2",
+      "name": "Route by Status"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Carrega a lista COMPLETA de convidados que iniciou o processo.\nconst allAttendees = $items(\"MeetVariables\");\n\n// Carrega a lista de clientes que foram efetivamente encontrados.\nconst foundClients = $input.all();\n\n// Carrega os dados globais do primeiro (e único) item do nó ConfirmGlobal.\n// Esta é a correção principal para a nova versão do n8n.\nconst globalData = $items(\"ConfirmGlobal\")[0].json;\n\nconst finalItems = [];\n\n// Converte a lista de clientes encontrados em um conjunto (Set) de e-mails para busca rápida.\nconst foundEmails = new Set(foundClients.map(item => item.json.property_e_mail));\n\n// Agora, iteramos sobre a lista original de convidados.\nfor (const attendeeItem of allAttendees) {\n  const attendeeEmail = attendeeItem.json.attendeeEmail;\n\n  // Prepara um objeto base com os dados globais que sempre serão necessários.\n  const baseItem = {\n    evolutionInstance: globalData.evolutionInstance,\n    managerPhone: globalData.managerPhone,\n  };\n\n  // Verificamos se o e-mail do convidado está na lista de e-mails encontrados.\n  if (foundEmails.has(attendeeEmail)) {\n    const clientData = foundClients.find(c => c.json.property_e_mail === attendeeEmail);\n    if (clientData) {\n      clientData.json.status = 'found';\n      clientData.json.eventData = attendeeItem.json;\n      // Adiciona os dados globais ao item encontrado.\n      clientData.json.globalData = baseItem;\n      finalItems.push(clientData);\n    }\n  } else {\n    const notFoundItem = {\n      json: {\n        status: 'not_found',\n        eventData: attendeeItem.json,\n        // Adiciona os dados globais ao item não encontrado.\n        globalData: baseItem\n      }\n    };\n    finalItems.push(notFoundItem);\n  }\n}\n\n// Retorna a lista única e combinada.\nreturn finalItems;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        512,
+        256
+      ],
+      "id": "9dd62e62-bc40-45ad-97a9-140ce9c25d65",
+      "name": "Tag Found and Not Found",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "841719a7-4e70-434b-a840-28be6ae5d971",
+              "name": "managerAlert",
+              "value": "=ALERTA: Uma reunião foi agendada com um cliente que não tem consultor responsável vinculado, direcione um responsável pelo atendimento do cliente.\n\nDados do Evento:\n- Cliente: {{ $json.name }}\n- Nome: {{ $json.eventData.nomeCompromisso }}\n- Data: {{ $json.eventData.diaSemana }} - {{ $json.eventData.dataReuniao }}\n- Horário: {{ $json.eventData.horaInicio }}\n- E-mail do Convidado: {{ $json.eventData.attendeeEmail }}\n\nPor favor, atualize o cadastro do cliente. \nLink para a base: {{ $json.url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1888,
+        432
+      ],
+      "id": "a637a56d-2b64-4c8c-b1e8-bbc8bc0e6c9a",
+      "name": "Build No Consultant Alert"
+    },
+    {
+      "parameters": {
+        "content": "# enviar confirmação para cliente"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2304,
+        400
+      ],
+      "typeVersion": 1,
+      "id": "621ad821-1199-4f0b-9aff-81a5de01fdb5",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ebe21b75-59c0-4205-b88a-d7e06ae56bc5",
+              "leftValue": "={{ $json.consultantPhone }}",
+              "rightValue": "=",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3152,
+        576
+      ],
+      "id": "738e5b32-1b3c-4337-bd9f-742ab5f90990",
+      "name": "Is Consultant Linked1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6553bb9b-523c-46d4-a3f4-6329c3f5aec2",
+              "name": "consultantName",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "92edfb54-f656-41be-b6b9-c87ce410f08d",
+              "name": "consultantPhone",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "f3662a3b-5950-4317-a755-bd382c6c3dc0",
+              "name": "consultantEmail",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "b569dd14-8146-4b7a-8def-166e5da13f03",
+              "name": "nomeCompromisso",
+              "value": "={{ $items(\"MeetVariables\") }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1664,
+        432
+      ],
+      "id": "17378415-b5f5-47f4-9c2d-a6d7604262ca",
+      "name": "Create Fake Consultant"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Carrega TODAS as listas de dados de que precisamos.\n// $items() é a função correta para pegar todos os resultados de um nó.\nconst allEvents = $items(\"MeetVariables\");\nconst allClients = $items(\"SearchClient\");\nconst allConsultants = $items(\"SearchConsultant1\");\n\nconst finalItems = [];\n\n// O loop principal DEVE ser sobre a lista de \"tarefas\", que é a lista de convidados/eventos.\nfor (const eventItem of allEvents) {\n  const dadosEvento = eventItem.json;\n  const attendeeEmail = dadosEvento.attendeeEmail;\n\n  // 1. Para este evento/convidado, encontre o registro do cliente correspondente.\n  const clientItem = allClients.find(c => c.json.property_e_mail === attendeeEmail);\n\n  // Se não encontrarmos o cliente na nossa base, não podemos continuar.\n  if (!clientItem) {\n    // console.log(`Cliente com email ${attendeeEmail} não encontrado.`);\n    continue;\n  }\n  const dadosCliente = clientItem.json;\n\n  // 2. Agora que temos o cliente, pegue o ID do consultor responsável por ele.\n  const consultantId = dadosCliente.property_responsible_consultant ? dadosCliente.property_responsible_consultant[0] : null;\n  \n  // Se o cliente não tiver um consultor, não podemos continuar.\n  if (!consultantId) {\n    console.log(`Cliente ${dadosCliente.name} não tem consultor responsável.`);\n    //continue;\n  }\n\n  // 3. Com o ID do consultor, encontre os detalhes completos do consultor.\n  const consultantItem = allConsultants.find(c => c.json.id === consultantId);\n\n  // Se, por algum motivo, não encontrarmos os detalhes do consultor, não continue.\n  if (!consultantItem) {\n    // console.log(`Detalhes do consultor com ID ${consultantId} não encontrados.`);\n    continue;\n  }\n  const dadosConsultor = consultantItem.json;\n\n  // 4. SUCESSO! Encontramos todas as partes. Montamos o objeto final.\n  finalItems.push({\n    json: {\n      // --- DADOS DO CONSULTOR ---\n      consultantName: dadosConsultor.property_name,\n      consultantPhone: dadosConsultor.property_phone,\n      consultantEmail: dadosConsultor.property_email,\n\n      // --- DADOS DO CLIENTE ---\n      clienteName: dadosCliente.name,\n      clienteEmail: dadosCliente.property_e_mail,\n      clientePhone: dadosCliente.property_telefone,\n      clienteChatId: dadosCliente.property_telefone ? dadosCliente.property_telefone.replace(/\\D/g, '') + '@s.whatsapp.net' : '',\n      clienteNick: dadosCliente.property_apelido_razao_social,\n\n      // --- DADOS DO EVENTO ---\n      nomeCompromisso: dadosEvento.nomeCompromisso,\n      dataReuniao: dadosEvento.dataReuniao,\n      diaSemana: dadosEvento.diaSemana,\n      horaInicio: dadosEvento.horaInicio,\n      horaFim: dadosEvento.horaFim,\n      dataReuniaoISO: dadosEvento.dataReuniaoISO,\n    }\n  });\n}\n\n// Retorna a lista final com todos os itens corretamente combinados.\nreturn finalItems;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2096,
+        880
+      ],
+      "id": "9bfc15e8-7a23-45e0-a98f-99e12f4814dc",
+      "name": "Unify All Data1"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "get",
+        "pageId": {
+          "__rl": true,
+          "value": "={{ $json.property_responsible_consultant[0] }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        1808,
+        880
+      ],
+      "id": "e79f7b9c-7a52-411d-bb8d-9da44241f349",
+      "name": "SearchConsultant1",
+      "credentials": {
+        "notionApi": {
+          "id": "D1pXvNxNoBaVi0WB",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ebe21b75-59c0-4205-b88a-d7e06ae56bc5",
+              "leftValue": "={{ $json.property_responsible_consultant[0] }}",
+              "rightValue": "=",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1456,
+        896
+      ],
+      "id": "39873141-2fb7-4d16-9ff1-e37bceb3145c",
+      "name": "Is Consultant Linked2"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "={{ $json.globalData.evolutionInstance }}",
+        "remoteJid": "={{ $json.globalData.managerPhone }}@s.whatsapp.net",
+        "messageText": "={{ $json.managerAlert }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        2112,
+        1184
+      ],
+      "id": "2dc866ca-84f9-4306-b6ce-74ec7f46e161",
+      "name": "Send Not Found Alert2",
+      "credentials": {
+        "evolutionApi": {
+          "id": "j5AbWpMg04wmHEJE",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "841719a7-4e70-434b-a840-28be6ae5d971",
+              "name": "managerAlert",
+              "value": "=ALERTA: Uma reunião foi agendada com um cliente que não tem consultor responsável vinculado, direcione um responsável pelo atendimento do cliente.\n\nDados do Evento:\n- Cliente: {{ $json.name }}\n- Nome: {{ $json.eventData.nomeCompromisso }}\n- Data: {{ $json.eventData.diaSemana }} - {{ $json.eventData.dataReuniao }}\n- Horário: {{ $json.eventData.horaInicio }}\n- E-mail do Convidado: {{ $json.eventData.attendeeEmail }}\n\nPor favor, atualize o cadastro do cliente. \nLink para a base: {{ $json.url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1936,
+        1184
+      ],
+      "id": "51d2550a-28b6-4f1e-bbea-3c31874aefc9",
+      "name": "Build No Consultant Alert1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6553bb9b-523c-46d4-a3f4-6329c3f5aec2",
+              "name": "consultantName",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "92edfb54-f656-41be-b6b9-c87ce410f08d",
+              "name": "consultantPhone",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "f3662a3b-5950-4317-a755-bd382c6c3dc0",
+              "name": "consultantEmail",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "b569dd14-8146-4b7a-8def-166e5da13f03",
+              "name": "nomeCompromisso",
+              "value": "={{ $items(\"MeetVariables\")[0] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1664,
+        1056
+      ],
+      "id": "3bafd329-f5ce-4b13-93e1-6ddcc6e28cd1",
+      "name": "Create Fake Consultant1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2320,
+        1040
+      ],
+      "id": "af74a2f8-3691-49a6-b28b-3294c218b28a",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Carrega TODAS as listas de dados de que precisamos.\n// $items() é a função correta para pegar todos os resultados de um nó.\nconst allEvents = $items(\"MeetVariables\");\nconst allClients = $items(\"SearchClient\");\nconst allConsultants = $items(\"SearchConsultant\");\n\nconst finalItems = [];\n\n// O loop principal DEVE ser sobre a lista de \"tarefas\", que é a lista de convidados/eventos.\nfor (const eventItem of allEvents) {\n  const dadosEvento = eventItem.json;\n  const attendeeEmail = dadosEvento.attendeeEmail;\n\n  // 1. Para este evento/convidado, encontre o registro do cliente correspondente.\n  const clientItem = allClients.find(c => c.json.property_e_mail === attendeeEmail);\n\n  // Se não encontrarmos o cliente na nossa base, não podemos continuar.\n  if (!clientItem) {\n    // console.log(`Cliente com email ${attendeeEmail} não encontrado.`);\n    continue;\n  }\n  const dadosCliente = clientItem.json;\n\n  // 2. Agora que temos o cliente, pegue o ID do consultor responsável por ele.\n  const consultantId = dadosCliente.property_responsible_consultant ? dadosCliente.property_responsible_consultant[0] : null;\n\n  // Se o cliente não tiver um consultor, não podemos continuar.\n  if (!consultantId) {\n    // console.log(`Cliente ${dadosCliente.name} não tem consultor responsável.`);\n    continue;\n  }\n\n  // 3. Com o ID do consultor, encontre os detalhes completos do consultor.\n  const consultantItem = allConsultants.find(c => c.json.id === consultantId);\n\n  // Se, por algum motivo, não encontrarmos os detalhes do consultor, não continue.\n  if (!consultantItem) {\n    // console.log(`Detalhes do consultor com ID ${consultantId} não encontrados.`);\n    continue;\n  }\n  const dadosConsultor = consultantItem.json;\n\n  // 4. SUCESSO! Encontramos todas as partes. Montamos o objeto final.\n  finalItems.push({\n    json: {\n      // --- DADOS DO CONSULTOR ---\n      consultantName: dadosConsultor.property_name,\n      consultantPhone: dadosConsultor.property_phone,\n      consultantEmail: dadosConsultor.property_email,\n\n      // --- DADOS DO CLIENTE ---\n      clienteName: dadosCliente.name,\n      clienteEmail: dadosCliente.property_e_mail,\n      clientePhone: dadosCliente.property_telefone,\n      clienteChatId: dadosCliente.property_telefone ? dadosCliente.property_telefone.replace(/\\D/g, '') + '@s.whatsapp.net' : '',\n      clienteNick: dadosCliente.property_apelido_razao_social,\n\n      // --- DADOS DO EVENTO ---\n      nomeCompromisso: dadosEvento.nomeCompromisso,\n      dataReuniao: dadosEvento.dataReuniao,\n      diaSemana: dadosEvento.diaSemana,\n      horaInicio: dadosEvento.horaInicio,\n      horaFim: dadosEvento.horaFim,\n      dataReuniaoISO: dadosEvento.dataReuniaoISO,\n    }\n  });\n}\n\n// Retorna a lista final com todos os itens corretamente combinados.\nreturn finalItems;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2048,
+        -48
+      ],
+      "id": "d204af30-8788-4aeb-9a85-3aaccb103d0d",
+      "name": "Unify All Data2"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "get",
+        "pageId": {
+          "__rl": true,
+          "value": "={{ $json.property_responsible_consultant[0] }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        1760,
+        -48
+      ],
+      "id": "9642a1ec-3855-45b0-a8d4-562b758a1b33",
+      "name": "SearchConsultant2",
+      "credentials": {
+        "notionApi": {
+          "id": "D1pXvNxNoBaVi0WB",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Carrega TODAS as listas de dados de que precisamos.\nconst allEvents = $items(\"MeetVariables\");\nconst allConsultants = $items(\"GetAllConsultant\"); // Sim, vamos buscar todos os consultores aqui.\n\nconst finalItems = [];\n\n// O loop principal é sobre os clientes que foram encontrados.\nfor (const clientItem of $input.all()) {\n  const dadosCliente = clientItem.json;\n\n  // 1. Encontra o evento correspondente para este cliente.\n  const eventItem = allEvents.find(e => e.json.attendeeEmail === dadosCliente.property_e_mail);\n  if (!eventItem) {\n    continue; // Se não achar o evento, pula para o próximo cliente.\n  }\n  const dadosEvento = eventItem.json;\n\n  // 2. Verifica se o cliente tem um consultor vinculado.\n  const consultantId = dadosCliente.property_responsible_consultant ? dadosCliente.property_responsible_consultant[0] : null;\n\n  let dadosConsultor = {}; // Objeto vazio por padrão.\n  let hasConsultant = false; // Flag para o IF.\n\n  // 3. Se tiver um ID de consultor, busca os detalhes.\n  if (consultantId) {\n    const consultantDetails = allConsultants.find(c => c.json.id === consultantId);\n    if (consultantDetails) {\n      dadosConsultor = consultantDetails.json;\n      hasConsultant = true;\n    }\n  }\n\n  // 4. Monta o objeto final, SEMPRE com a mesma estrutura.\n  finalItems.push({\n    json: {\n      // --- FLAG DE CONTROLE ---\n      hasConsultant: hasConsultant,\n\n      // --- DADOS DO CONSULTOR (preenchidos ou vazios) ---\n      consultantName: dadosConsultor.property_name || '',\n      consultantPhone: dadosConsultor.property_phone || '',\n      consultantEmail: dadosConsultor.property_email || '',\n\n      // --- DADOS DO CLIENTE ---\n      clienteName: dadosCliente.name,\n      clienteEmail: dadosCliente.property_e_mail,\n      clientePhone: dadosCliente.property_telefone,\n      clienteChatId: dadosCliente.property_telefone ? dadosCliente.property_telefone.replace(/\\D/g, '') + '@s.whatsapp.net' : '',\n      clienteNick: dadosCliente.property_apelido_razao_social,\n      clienteUrl: dadosCliente.url,\n\n      // --- DADOS DO EVENTO ---\n      nomeCompromisso: dadosEvento.nomeCompromisso,\n      dataReuniao: dadosEvento.dataReuniao,\n      diaSemana: dadosEvento.diaSemana,\n      horaInicio: dadosEvento.horaInicio,\n      horaFim: dadosEvento.horaFim,\n      dataReuniaoISO: dadosEvento.dataReuniaoISO,\n      \n      // --- DADOS GLOBAIS ---\n      // (Vamos precisar buscá-los aqui também)\n      globalData: $('ConfirmGlobal').item.json\n    }\n  });\n}\n\nreturn finalItems;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1088,
+        720
+      ],
+      "id": "68df600e-601b-4d26-939f-747b046831a4",
+      "name": "Process Client Data1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ebe21b75-59c0-4205-b88a-d7e06ae56bc5",
+              "leftValue": "={{ $json.property_responsible_consultant[0] }}",
+              "rightValue": "=",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1456,
+        240
+      ],
+      "id": "8145ccb2-0bea-48cc-950a-d9643842f143",
+      "name": "Is Consultant Linked"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "={{ $json.globalData.evolutionInstance }}",
+        "remoteJid": "={{ $json.globalData.managerPhone }}@s.whatsapp.net",
+        "messageText": "={{ $json.managerAlert }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        2128,
+        432
+      ],
+      "id": "14f773c5-7ce4-40ed-ae38-02582262de34",
+      "name": "Send Not Found Consultant Alert",
       "credentials": {
         "evolutionApi": {
           "id": "j5AbWpMg04wmHEJE",
@@ -539,6 +1080,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Build No Attendee Alert",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -579,7 +1127,7 @@
       "main": [
         [
           {
-            "node": "SearchConsultant",
+            "node": "Tag Found and Not Found",
             "type": "main",
             "index": 0
           }
@@ -595,7 +1143,8 @@
             "type": "main",
             "index": 0
           }
-        ]
+        ],
+        []
       ]
     },
     "Build Consultant Alert": {
@@ -620,7 +1169,7 @@
         ],
         [
           {
-            "node": "Build Consultant Alert",
+            "node": "Is Consultant Linked1",
             "type": "main",
             "index": 0
           }
@@ -632,13 +1181,199 @@
         [],
         []
       ]
+    },
+    "Build No Attendee Alert": {
+      "main": [
+        [
+          {
+            "node": "Send No Attendee Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Not Found Alert": {
+      "main": [
+        [
+          {
+            "node": "Send Not Found Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Status": {
+      "main": [
+        [
+          {
+            "node": "Is Consultant Linked",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build Not Found Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tag Found and Not Found": {
+      "main": [
+        [
+          {
+            "node": "Route by Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build No Consultant Alert": {
+      "main": [
+        [
+          {
+            "node": "Send Not Found Consultant Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Consultant Linked1": {
+      "main": [
+        [
+          {
+            "node": "Build Consultant Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Create Fake Consultant": {
+      "main": [
+        [
+          {
+            "node": "Build No Consultant Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Unify All Data1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SearchConsultant1": {
+      "main": [
+        [
+          {
+            "node": "Unify All Data1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Consultant Linked2": {
+      "main": [
+        [
+          {
+            "node": "SearchConsultant1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create Fake Consultant1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build No Consultant Alert1": {
+      "main": [
+        [
+          {
+            "node": "Send Not Found Alert2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Fake Consultant1": {
+      "main": [
+        [
+          {
+            "node": "Build No Consultant Alert1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "SearchConsultant2": {
+      "main": [
+        [
+          {
+            "node": "Unify All Data2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Consultant Linked": {
+      "main": [
+        [
+          {
+            "node": "SearchConsultant",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create Fake Consultant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Not Found Consultant Alert": {
+      "main": [
+        []
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "80bcc54c-13dd-4d91-88dd-0d6f84ba5249",
+  "versionId": "7de9068b-b597-49b3-a136-f11930c05ced",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "c639fe7ebeb422477546545535913c1fe6d467efc75f0ba65b23a5e5a0935928"
