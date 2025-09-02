@@ -10,7 +10,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        0,
+        -160,
         0
       ],
       "id": "ae49690c-75b3-4d24-908e-9e406db2ab8e",
@@ -30,7 +30,7 @@
             {
               "id": "98b78147-17a7-49ca-948b-2d36d290326c",
               "name": "customerMessage",
-              "value": "={{ $json.body.data.message.conversation }}",
+              "value": "={{ $json.body.data.message.conversation || $json.body.data.message.extendedTextMessage?.text || '' }}",
               "type": "string"
             }
           ]
@@ -40,14 +40,604 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        208,
+        0,
         0
       ],
       "id": "06e61b0e-2a0a-4d4e-b2f7-fe9653067187",
       "name": "setWebhookData"
+    },
+    {
+      "parameters": {
+        "content": "### Rota de Confirmação\n\nPróximo passo: Chamar o workflow `HandleConfirmation`"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -112,
+        -912
+      ],
+      "id": "535b07ad-8b41-4136-a8cc-b1233e7fd182",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "### Rota de Reagendamento\n\nPróximo passo: Chamar o workflow `HandleReschedule`"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -112,
+        -736
+      ],
+      "id": "667b45f0-0456-4af9-bb4c-74f84ef409a1",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "### Rota de Cancelamento\n\nPróximo passo: Chamar o workflow `HandleCancel`"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -112,
+        -576
+      ],
+      "id": "008ce350-8efd-409a-8023-482b10d44374",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "### Rota Padrão (Indefinido)\n\nPróximo passo: Notificar um humano ou pedir esclarecimento ao cliente."
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -112,
+        -416
+      ],
+      "id": "757c5a74-a2a7-4ee9-8df0-4e93f084fe19",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        784,
+        -160
+      ],
+      "id": "b0a95def-5df4-4ae2-9b4c-844364d43a77",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "nJopBduo6R0Rmkvt",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('setWebhookData' ).item.json.customerMessage }}",
+        "options": {
+          "systemMessage": "Você é um assistente de IA especializado em classificar mensagens de clientes. Sua única tarefa é analisar a mensagem do usuário e determinar a intenção principal. Responda APENAS com uma das seguintes categorias, sem nenhuma palavra ou pontuação adicional:\n\n- CONFIRMATION (se o cliente estiver confirmando, concordando, dizendo sim, ok, confirmado, etc.)\n- RESCHEDULE (se o cliente quiser reagendar, mudar a data/hora, verificar outra disponibilidade, etc.)\n- CANCEL (se o cliente quiser cancelar, desmarcar, não puder mais comparecer, etc.)\n- UNDEFINED (se a mensagem não se encaixar claramente em nenhuma das categorias acima ou for uma pergunta geral)."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        784,
+        -352
+      ],
+      "id": "25823270-3e82-4d24-a062-afda53afc89d",
+      "name": "AI_Intent_Classifier"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('AI_Intent_Classifier').item.json.output }}",
+                    "rightValue": "CONFIRMATION",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "2f0fe78c-17f9-4667-89b1-b107c0b57a8d"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ed608ba2-9557-4e93-bc13-1855435d6308",
+                    "leftValue": "={{ $('AI_Intent_Classifier').item.json.output }}",
+                    "rightValue": "RESCHEDULE",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "0251d5e1-2e39-4b21-ad25-b66d759757ad",
+                    "leftValue": "={{ $('AI_Intent_Classifier').item.json.output }}",
+                    "rightValue": "CANCEL",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1136,
+        -368
+      ],
+      "id": "3b3fceb9-00e3-4c6a-a743-cedbbe152687",
+      "name": "Route_by_Intent"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "sw5NIQwhdDsbcvnw",
+          "mode": "list",
+          "cachedResultName": "HandleConfirmation"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "customerPhoneNumber": "={{ $('setWebhookData').item.json.customerPhoneNumber }}"
+          },
+          "matchingColumns": [
+            "customerPhoneNumber"
+          ],
+          "schema": [
+            {
+              "id": "customerPhoneNumber",
+              "displayName": "customerPhoneNumber",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1344,
+        -496
+      ],
+      "id": "1b111e61-cfbd-41f4-91c1-d3eb3fc7c9dd",
+      "name": "Execute HandleConfirm"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "SOvPjpc4SokS7mQI",
+          "mode": "list",
+          "cachedResultName": "HandleCancel"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "customerPhoneNumber": "={{ $('setWebhookData').item.json.customerPhoneNumber }}"
+          },
+          "matchingColumns": [
+            "customerPhoneNumber"
+          ],
+          "schema": [
+            {
+              "id": "customerPhoneNumber",
+              "displayName": "customerPhoneNumber",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1344,
+        -192
+      ],
+      "id": "7fab7373-09b2-4391-ad89-a4531e443a1a",
+      "name": "Execute HandleCancel"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "uOe0LMVLLlUpDhoj",
+          "mode": "list",
+          "cachedResultName": "HandleReschedule_Start"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "customerPhoneNumber": "={{ $('setWebhookData').item.json.customerPhoneNumber }}"
+          },
+          "matchingColumns": [
+            "customerPhoneNumber"
+          ],
+          "schema": [
+            {
+              "id": "customerPhoneNumber",
+              "displayName": "customerPhoneNumber",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1344,
+        -352
+      ],
+      "id": "e6345632-8cfa-4436-827f-b15b63f06746",
+      "name": "Execute HandleReschedule_Start"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "value": "bf1094d6-c997-456f-82eb-cd30352c85c3",
+          "mode": "list",
+          "cachedResultName": "Lista de Contatos"
+        },
+        "returnAll": true,
+        "filterType": "manual",
+        "filters": {
+          "conditions": [
+            {
+              "key": "clientPhone|formula",
+              "condition": "contains",
+              "returnType": "text",
+              "textValue": "={{ $json.customerPhoneNumber.replace('@s.whatsapp.net', '') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "f96faf81-4f65-45d5-be0d-22fe8f22096b",
+      "name": "SearchClient",
+      "credentials": {
+        "notionApi": {
+          "id": "D1pXvNxNoBaVi0WB",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "Y89uM1oXgHh54aMv",
+          "mode": "list",
+          "cachedResultName": "HandleReschedule_Confirm"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "customerPhoneNumber": "={{ $('setWebhookData').item.json.customerPhoneNumber }}"
+          },
+          "matchingColumns": [
+            "customerPhoneNumber"
+          ],
+          "schema": [
+            {
+              "id": "customerPhoneNumber",
+              "displayName": "customerPhoneNumber",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1344,
+        -16
+      ],
+      "id": "3e1e85f9-ad59-4d0c-8f38-ff8301f07294",
+      "name": "Execute HandleReschedule_Confirm"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "sw5NIQwhdDsbcvnw",
+          "mode": "list",
+          "cachedResultName": "HandleConfirmation"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "customerPhoneNumber": "={{ $('setWebhookData').item.json.customerPhoneNumber }}"
+          },
+          "matchingColumns": [
+            "customerPhoneNumber"
+          ],
+          "schema": [
+            {
+              "id": "customerPhoneNumber",
+              "displayName": "customerPhoneNumber",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1344,
+        192
+      ],
+      "id": "b10187b4-4779-4a48-8125-ac5b153a0d12",
+      "name": "Execute HandleReschedule_ProcessSuggestion"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "8f3db051-4054-43eb-b39f-aac2867d8591",
+                    "leftValue": "={{ $('SearchClient').item.json.property_conversation_status }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "empty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ca6cbe3b-a471-4aa1-99fc-1c93f40e5986",
+                    "leftValue": "={{ $('SearchClient').item.json.property_conversation_status }}",
+                    "rightValue": "AWAITING_RESCHEDULE_CONFIRM",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a6a7e330-ae35-4194-bf37-58ccd331baca",
+                    "leftValue": "={{ $('SearchClient').item.json.property_conversation_status }}",
+                    "rightValue": "AWAITING_RESCHEDULE_SUGGESTION",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('SearchClient').item.json.property_conversation_status }}",
+                    "rightValue": "IDLE ",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "f86a8f68-9d9e-40e1-8e67-5e0b6b629c73"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        432,
+        -32
+      ],
+      "id": "c6c11abe-b5b3-4cac-8220-670fe11b8e85",
+      "name": "Route by Conversation Status"
     }
   ],
-  "pinData": {},
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "content-type": "application/json",
+            "user-agent": "axios/1.7.9",
+            "content-length": "1021",
+            "accept-encoding": "gzip, compress, deflate, br",
+            "host": "host.docker.internal:5678",
+            "connection": "keep-alive"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "event": "messages.upsert",
+            "instance": "Agente_Agendamento_HC",
+            "data": {
+              "key": {
+                "remoteJid": "5511989214740@s.whatsapp.net",
+                "fromMe": false,
+                "id": "3FEFE860CA0F41177012"
+              },
+              "pushName": "Gabriel Hungaro",
+              "status": "DELIVERY_ACK",
+              "message": {
+                "messageContextInfo": {
+                  "deviceListMetadata": {
+                    "senderKeyHash": "iqhrFRqNEa+yuw==",
+                    "senderTimestamp": "1756638878",
+                    "recipientKeyHash": "QgiiVvPrP1kM1Q==",
+                    "recipientTimestamp": "1755307322"
+                  },
+                  "deviceListMetadataVersion": 2
+                },
+                "conversation": "Podemos marcar para Terça às 15h?"
+              },
+              "contextInfo": {
+                "expiration": 0,
+                "ephemeralSettingTimestamp": "0",
+                "disappearingMode": {
+                  "initiator": "CHANGED_IN_CHAT"
+                }
+              },
+              "messageType": "conversation",
+              "messageTimestamp": 1756788227,
+              "instanceId": "2607dd47-0ea5-4d99-a535-bf330cb12868",
+              "source": "unknown"
+            },
+            "destination": "http://host.docker.internal:5678/webhook-test/inbound-customer-message",
+            "date_time": "2025-09-02T01:43:47.008Z",
+            "sender": "5511982003176@s.whatsapp.net",
+            "server_url": "https://evolutionapi.vps.hungaroconsultoria.com.br",
+            "apikey": "DDB695A8AE21-4AEF-A34B-1A5AB932C72F"
+          },
+          "webhookUrl": "http://n8n:5678/webhook-test/inbound-customer-message",
+          "executionMode": "test"
+        }
+      }
+    ]
+  },
   "connections": {
     "Webhook": {
       "main": [
@@ -59,14 +649,110 @@
           }
         ]
       ]
+    },
+    "setWebhookData": {
+      "main": [
+        [
+          {
+            "node": "SearchClient",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI_Intent_Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI_Intent_Classifier": {
+      "main": [
+        [
+          {
+            "node": "Route_by_Intent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route_by_Intent": {
+      "main": [
+        [
+          {
+            "node": "Execute HandleConfirm",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute HandleReschedule_Start",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute HandleCancel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SearchClient": {
+      "main": [
+        [
+          {
+            "node": "Route by Conversation Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Conversation Status": {
+      "main": [
+        [
+          {
+            "node": "AI_Intent_Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute HandleReschedule_Confirm",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute HandleReschedule_ProcessSuggestion",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "b4b1070f-0199-44ae-8a0a-ef37b5b6f940",
+  "versionId": "27dc9dd5-f1a0-43c9-a5e9-318cddb589b4",
   "meta": {
+    "templateCredsSetupCompleted": true,
     "instanceId": "c639fe7ebeb422477546545535913c1fe6d467efc75f0ba65b23a5e5a0935928"
   },
   "id": "VAtkuKTyC6RaBm5p",

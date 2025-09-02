@@ -1,0 +1,491 @@
+{
+  "name": "HandleReschedule_Confirm",
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "Agente_Agendamento_HC",
+        "remoteJid": "={{ $('SetInitialData').item.json.customerPhone }}@s.whatsapp.net",
+        "messageText": "={{ $('BuildMessages').item.json.messageToClient }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        -48
+      ],
+      "id": "26673d2c-bc21-4e06-b45e-6d114d78215a",
+      "name": "Send to Client",
+      "credentials": {
+        "evolutionApi": {
+          "id": "j5AbWpMg04wmHEJE",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "Agente_Agendamento_HC",
+        "remoteJid": "={{ $('SearchConsultant').item.json.property_phone.replace(/\\D/g, '') }}@s.whatsapp.net",
+        "messageText": "={{ $('BuildConsultantMessage').item.json.messageToConsultant }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        192
+      ],
+      "id": "839be7c5-f197-4aad-b621-c69cf1c89885",
+      "name": "Send to Consultant",
+      "credentials": {
+        "evolutionApi": {
+          "id": "j5AbWpMg04wmHEJE",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "customerPhoneNumber"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -608,
+        80
+      ],
+      "id": "733474ed-b7ef-4b37-aff8-05ad6fcc602d",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "value": "bf1094d6-c997-456f-82eb-cd30352c85c3",
+          "mode": "list",
+          "cachedResultName": "Lista de Contatos"
+        },
+        "returnAll": true,
+        "filterType": "manual",
+        "filters": {
+          "conditions": [
+            {
+              "key": "clientPhone|formula",
+              "condition": "contains",
+              "returnType": "text",
+              "textValue": "={{ $json.customerPhone }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        -128,
+        80
+      ],
+      "id": "966ee47d-1bee-49ea-b915-47d43ebeef32",
+      "name": "SearchClient",
+      "credentials": {
+        "notionApi": {
+          "id": "D1pXvNxNoBaVi0WB",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "customerPhone",
+              "value": "={{ $json.customerPhoneNumber.replace('@s.whatsapp.net', '') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -368,
+        80
+      ],
+      "id": "1dcf212f-4a0b-4caa-bd62-bd40d1eaacdd",
+      "name": "SetInitialData"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "get",
+        "pageId": {
+          "__rl": true,
+          "value": "={{ $('PrepareData').item.json.consultantId }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        1440,
+        192
+      ],
+      "id": "563eb5ad-6b18-4a84-b61e-638f1ad75612",
+      "name": "SearchConsultant",
+      "credentials": {
+        "notionApi": {
+          "id": "D1pXvNxNoBaVi0WB",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "c_7884974ab5a1eab27a106c4a78d7d6daf6c68570378b40d003382781ced7f9f4@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "Teste - HC"
+        },
+        "returnAll": true,
+        "timeMin": "={{ $now.toISODate() }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        80,
+        80
+      ],
+      "id": "63b8ad02-d314-4d74-9f28-f15c1f545024",
+      "name": "GetMeet",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "Bct71lYLp9OoL4OX",
+          "name": "Google HC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "displayName",
+              "value": "={{ $('SearchClient').item.json.property_client_nick || $('SearchClient').item.json.name.split(' ')[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "2",
+              "name": "consultantId",
+              "value": "={{ $('SearchClient').item.json.property_responsible_consultant[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "f1de2c25-8c94-4c66-a01d-f6125c2840ec",
+              "name": "meetingSummary",
+              "value": "={{ $('FilterAndSelectMeeting').item.json.summary }}",
+              "type": "string"
+            },
+            {
+              "id": "c0635c4c-3014-4ec3-a8c2-4040553ea2fc",
+              "name": "meetingDateTime",
+              "value": "={{ DateTime.fromISO($('FilterAndSelectMeeting').item.json.start.dateTime).setZone('America/Sao_Paulo').toFormat('dd/MM/yyyy \\'às\\' HH:mm') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        848,
+        80
+      ],
+      "id": "119fe4b1-dd44-49bd-8563-77c121882d56",
+      "name": "PrepareData"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "messageToConsultant",
+              "value": "=❌ Reunião Cancelada\n\nOlá, {{ $('SearchConsultant').item.json.property_name }}. \n\nO cliente *{{ $('PrepareData').item.json.displayName }}* cancelou a seguinte reunião:\n\n- *Compromisso:* {{ $('PrepareData').item.json.meetingSummary }}\n- *Data e Hora:* {{ $('PrepareData').item.json.meetingDateTime }}\n\nO cliente foi orientado a reagendar, se desejar.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1680,
+        192
+      ],
+      "id": "aef2cfe3-758d-4238-a9a7-d52429bfab6e",
+      "name": "BuildConsultantMessage"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b6ffd3c9-a8d5-4c9b-a994-6a30914edc53",
+              "name": "messageToClient",
+              "value": "=Olá, {{ $('PrepareData').item.json.displayName }}. Recebemos seu pedido e cancelamos a reunião de '{{ $('PrepareData').item.json.meetingSummary }}'.\n\nSe desejar, podemos verificar novos horários para reagendamento. Você prefere ver as opções agora ou entrar em contato em outro momento?\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1056,
+        80
+      ],
+      "id": "f9fd9bf6-d585-471e-935b-6fc06eef08af",
+      "name": "BuildMessages"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Pega o e-mail do cliente que encontramos no Notion.\n// Usamos $items() para buscar de um nó anterior com segurança.\nconst clientEmail = $items('SearchClient')[0].json.property_e_mail;\n\n// Pega a lista de todos os eventos futuros que o Google Calendar retornou.\nconst allFutureEvents = $input.all();\n\n// Filtra essa lista para manter apenas os eventos onde o nosso cliente é um convidado.\nconst clientEvents = allFutureEvents.filter(event => {\n  // Verifica se a lista de convidados (attendees) existe.\n  if (!event.json.attendees) {\n    return false;\n  }\n  // Procura na lista de convidados por um que tenha o mesmo e-mail do nosso cliente.\n  return event.json.attendees.some(attendee => attendee.email === clientEmail);\n});\n\n// Se não encontrarmos nenhum evento para este cliente, retornamos um objeto vazio\n// para que o fluxo não quebre nos próximos nós.\nif (clientEvents.length === 0) {\n  return [{ json: { summary: 'Nenhum compromisso encontrado', start: { dateTime: new Date().toISOString() } } }];\n}\n\n// Ordena os eventos encontrados pela data de início, do mais próximo para o mais distante.\nclientEvents.sort((a, b) => new Date(a.json.start.dateTime) - new Date(b.json.start.dateTime));\n\n// Retorna apenas o primeiro item da lista ordenada, que é o próximo compromisso do cliente.\nreturn [clientEvents[0]];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        288,
+        80
+      ],
+      "id": "2f775532-b8f7-42b9-ab2c-1c5a31e5f524",
+      "name": "FilterAndSelectMeeting"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "c_7884974ab5a1eab27a106c4a78d7d6daf6c68570378b40d003382781ced7f9f4@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "Teste - HC"
+        },
+        "eventId": "={{ $('FilterAndSelectMeeting').item.json.id }}",
+        "updateFields": {
+          "end": "={{ DateTime.fromISO($('FilterAndSelectMeeting').item.json.start.dateTime).plus({ weeks: 1 }).toISO() }}",
+          "sendUpdates": "all",
+          "start": "={{ DateTime.fromISO($('FilterAndSelectMeeting').item.json.end.dateTime).plus({ weeks: 1 }).toISO() }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        848,
+        -256
+      ],
+      "id": "bf8c5208-41e4-4eb4-a91e-567f3dcbed7a",
+      "name": "Update Meeting in Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "Bct71lYLp9OoL4OX",
+          "name": "Google HC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "update",
+        "pageId": {
+          "__rl": true,
+          "value": "={{ $('SearchClient').item.json.id }}",
+          "mode": "id"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "conversationStatus|select",
+              "selectValue": "IDLE"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        848,
+        -96
+      ],
+      "id": "27757439-911c-475d-ab11-20a51dcdf882",
+      "name": "Update a database page",
+      "credentials": {
+        "notionApi": {
+          "id": "D1pXvNxNoBaVi0WB",
+          "name": "Notion account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "customerPhoneNumber": "5511989214740@s.whatsapp.net"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "SetInitialData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SearchClient": {
+      "main": [
+        [
+          {
+            "node": "GetMeet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SetInitialData": {
+      "main": [
+        [
+          {
+            "node": "SearchClient",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SearchConsultant": {
+      "main": [
+        [
+          {
+            "node": "BuildConsultantMessage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetMeet": {
+      "main": [
+        [
+          {
+            "node": "FilterAndSelectMeeting",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PrepareData": {
+      "main": [
+        [
+          {
+            "node": "BuildMessages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "BuildConsultantMessage": {
+      "main": [
+        [
+          {
+            "node": "Send to Consultant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "BuildMessages": {
+      "main": [
+        [
+          {
+            "node": "Send to Client",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "SearchConsultant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FilterAndSelectMeeting": {
+      "main": [
+        [
+          {
+            "node": "PrepareData",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update Meeting in Calendar",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update a database page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Meeting in Calendar": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d825dff8-4666-43d9-8847-d9d2415c5996",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c639fe7ebeb422477546545535913c1fe6d467efc75f0ba65b23a5e5a0935928"
+  },
+  "id": "Y89uM1oXgHh54aMv",
+  "tags": []
+}

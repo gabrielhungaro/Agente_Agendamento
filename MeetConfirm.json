@@ -6,6 +6,14 @@
         "rule": {
           "interval": [
             {
+              "field": "weeks",
+              "triggerAtDay": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
               "triggerAtHour": 9
             }
           ]
@@ -51,7 +59,7 @@
             {
               "id": "151df444-7823-4646-963b-0350a8764127",
               "name": "daysToConfirm",
-              "value": 4,
+              "value": 0,
               "type": "number"
             },
             {
@@ -173,9 +181,9 @@
         "operation": "getAll",
         "calendar": {
           "__rl": true,
-          "value": "c_dba7b64ba03811cf4ca158de25fa67cde30121350c64bb36cf1d2dc798750900@group.calendar.google.com",
+          "value": "c_7884974ab5a1eab27a106c4a78d7d6daf6c68570378b40d003382781ced7f9f4@group.calendar.google.com",
           "mode": "list",
-          "cachedResultName": "HC - Compromisso"
+          "cachedResultName": "Teste - HC"
         },
         "returnAll": true,
         "timeMin": "={{ $json.startDate }}",
@@ -220,7 +228,7 @@
       "typeVersion": 2,
       "position": [
         0,
-        -848
+        -592
       ],
       "id": "f99c5e57-5b49-47e1-b1b6-b5ba2c0f3198",
       "name": "Webhook",
@@ -228,7 +236,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Carrega TODAS as listas de dados de que precisamos.\n// $items() é a função correta para pegar todos os resultados de um nó.\nconst allEvents = $items(\"MeetVariables\");\nconst allClients = $items(\"SearchClient\");\nconst allConsultants = $items(\"SearchConsultant\");\n\nconst finalItems = [];\n\n// O loop principal DEVE ser sobre a lista de \"tarefas\", que é a lista de convidados/eventos.\nfor (const eventItem of allEvents) {\n  const dadosEvento = eventItem.json;\n  const attendeeEmail = dadosEvento.attendeeEmail;\n\n  // 1. Para este evento/convidado, encontre o registro do cliente correspondente.\n  const clientItem = allClients.find(c => c.json.property_e_mail === attendeeEmail);\n\n  // Se não encontrarmos o cliente na nossa base, não podemos continuar.\n  if (!clientItem) {\n    // console.log(`Cliente com email ${attendeeEmail} não encontrado.`);\n    continue;\n  }\n  const dadosCliente = clientItem.json;\n\n  // 2. Agora que temos o cliente, pegue o ID do consultor responsável por ele.\n  const consultantId = dadosCliente.property_responsible_consultant ? dadosCliente.property_responsible_consultant[0] : null;\n\n  // Se o cliente não tiver um consultor, não podemos continuar.\n  if (!consultantId) {\n    // console.log(`Cliente ${dadosCliente.name} não tem consultor responsável.`);\n    continue;\n  }\n\n  // 3. Com o ID do consultor, encontre os detalhes completos do consultor.\n  const consultantItem = allConsultants.find(c => c.json.id === consultantId);\n\n  // Se, por algum motivo, não encontrarmos os detalhes do consultor, não continue.\n  if (!consultantItem) {\n    // console.log(`Detalhes do consultor com ID ${consultantId} não encontrados.`);\n    continue;\n  }\n  const dadosConsultor = consultantItem.json;\n\n  // 4. SUCESSO! Encontramos todas as partes. Montamos o objeto final.\n  finalItems.push({\n    json: {\n      // --- DADOS DO CONSULTOR ---\n      consultantName: dadosConsultor.property_name,\n      consultantPhone: dadosConsultor.property_phone,\n      consultantEmail: dadosConsultor.property_email,\n\n      // --- DADOS DO CLIENTE ---\n      clienteName: dadosCliente.name,\n      clienteEmail: dadosCliente.property_e_mail,\n      clientePhone: dadosCliente.property_telefone,\n      clienteChatId: dadosCliente.property_telefone ? dadosCliente.property_telefone.replace(/\\D/g, '') + '@s.whatsapp.net' : '',\n      clienteNick: dadosCliente.property_apelido_razao_social,\n\n      // --- DADOS DO EVENTO ---\n      nomeCompromisso: dadosEvento.nomeCompromisso,\n      dataReuniao: dadosEvento.dataReuniao,\n      diaSemana: dadosEvento.diaSemana,\n      horaInicio: dadosEvento.horaInicio,\n      horaFim: dadosEvento.horaFim,\n      dataReuniaoISO: dadosEvento.dataReuniaoISO,\n    }\n  });\n}\n\n// Retorna a lista final com todos os itens corretamente combinados.\nreturn finalItems;"
+        "jsCode": "// Carrega TODAS as listas de dados de que precisamos.\n// $items() é a função correta para pegar todos os resultados de um nó.\nconst allEvents = $items(\"MeetVariables\");\nconst allClients = $items(\"SearchClient\");\nconst allConsultants = $items(\"SearchConsultant\");\n\nconst finalItems = [];\n\n// O loop principal DEVE ser sobre a lista de \"tarefas\", que é a lista de convidados/eventos.\nfor (const eventItem of allEvents) {\n  const dadosEvento = eventItem.json;\n  const attendeeEmail = dadosEvento.attendeeEmail;\n\n  // 1. Para este evento/convidado, encontre o registro do cliente correspondente.\n  const clientItem = allClients.find(c => c.json.property_e_mail === attendeeEmail);\n\n  // Se não encontrarmos o cliente na nossa base, não podemos continuar.\n  if (!clientItem) {\n    // console.log(`Cliente com email ${attendeeEmail} não encontrado.`);\n    continue;\n  }\n  const dadosCliente = clientItem.json;\n\n  // 2. Agora que temos o cliente, pegue o ID do consultor responsável por ele.\n  const consultantId = dadosCliente.property_responsible_consultant ? dadosCliente.property_responsible_consultant[0] : null;\n\n  // Se o cliente não tiver um consultor, não podemos continuar.\n  if (!consultantId) {\n    // console.log(`Cliente ${dadosCliente.name} não tem consultor responsável.`);\n    continue;\n  }\n\n  // 3. Com o ID do consultor, encontre os detalhes completos do consultor.\n  const consultantItem = allConsultants.find(c => c.json.id === consultantId);\n\n  // Se, por algum motivo, não encontrarmos os detalhes do consultor, não continue.\n  if (!consultantItem) {\n    // console.log(`Detalhes do consultor com ID ${consultantId} não encontrados.`);\n    continue;\n  }\n  const dadosConsultor = consultantItem.json;\n\n  // 4. SUCESSO! Encontramos todas as partes. Montamos o objeto final.\n  finalItems.push({\n    json: {\n      // --- DADOS DO CONSULTOR ---\n      consultantName: dadosConsultor.property_name,\n      consultantPhone: dadosConsultor.property_phone,\n      consultantEmail: dadosConsultor.property_email,\n\n      // --- DADOS DO CLIENTE ---\n      clienteName: dadosCliente.name,\n      clienteEmail: dadosCliente.property_e_mail,\n      clientePhone: dadosCliente.property_telefone,\n      clienteChatId: dadosCliente.property_telefone ? dadosCliente.property_telefone.replace(/\\D/g, '') + '@s.whatsapp.net' : '',\n      clienteNick: dadosCliente.property_client_nick,\n\n      // --- DADOS DO EVENTO ---\n      nomeCompromisso: dadosEvento.nomeCompromisso,\n      dataReuniao: dadosEvento.dataReuniao,\n      diaSemana: dadosEvento.diaSemana,\n      horaInicio: dadosEvento.horaInicio,\n      horaFim: dadosEvento.horaFim,\n      dataReuniaoISO: dadosEvento.dataReuniaoISO,\n    }\n  });\n}\n\n// Retorna a lista final com todos os itens corretamente combinados.\nreturn finalItems;"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -944,67 +952,7 @@
       }
     }
   ],
-  "pinData": {
-    "Webhook": [
-      {
-        "json": {
-          "headers": {
-            "content-type": "application/json",
-            "user-agent": "axios/1.7.9",
-            "content-length": "975",
-            "accept-encoding": "gzip, compress, deflate, br",
-            "host": "host.docker.internal:5678",
-            "connection": "keep-alive"
-          },
-          "params": {},
-          "query": {},
-          "body": {
-            "event": "messages.upsert",
-            "instance": "Agente_Agendamento_HC",
-            "data": {
-              "key": {
-                "remoteJid": "5511989214740@s.whatsapp.net",
-                "fromMe": false,
-                "id": "3FD3EE0B760654979730"
-              },
-              "pushName": "Gabriel Hungaro",
-              "status": "DELIVERY_ACK",
-              "message": {
-                "messageContextInfo": {
-                  "deviceListMetadata": {
-                    "senderKeyHash": "iqhrFRqNEa+yuw==",
-                    "senderTimestamp": "1755307284",
-                    "recipientKeyHash": "QgiiVvPrP1kM1Q==",
-                    "recipientTimestamp": "1755307322"
-                  },
-                  "deviceListMetadataVersion": 2
-                },
-                "conversation": "Ola"
-              },
-              "contextInfo": {
-                "expiration": 0,
-                "ephemeralSettingTimestamp": "0",
-                "disappearingMode": {
-                  "initiator": "CHANGED_IN_CHAT"
-                }
-              },
-              "messageType": "conversation",
-              "messageTimestamp": 1755308635,
-              "instanceId": "2607dd47-0ea5-4d99-a535-bf330cb12868",
-              "source": "unknown"
-            },
-            "destination": "http://host.docker.internal:5678/webhook-test/meetconfirm",
-            "date_time": "2025-08-15T22:43:56.229Z",
-            "sender": "5511982003176@s.whatsapp.net",
-            "server_url": "https://evolutionapi.vps.hungaroconsultoria.com.br",
-            "apikey": "DDB695A8AE21-4AEF-A34B-1A5AB932C72F"
-          },
-          "webhookUrl": "http://n8n:5678/webhook-test/meetconfirm",
-          "executionMode": "test"
-        }
-      }
-    ]
-  },
+  "pinData": {},
   "connections": {
     "Schedule Trigger": {
       "main": [
@@ -1373,7 +1321,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "7de9068b-b597-49b3-a136-f11930c05ced",
+  "versionId": "4e791644-8400-4623-ac6f-130b359e0ebb",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "c639fe7ebeb422477546545535913c1fe6d467efc75f0ba65b23a5e5a0935928"

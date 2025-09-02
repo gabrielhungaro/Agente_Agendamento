@@ -1,0 +1,403 @@
+{
+  "name": "HandleConfirmation",
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "Agente_Agendamento_HC",
+        "remoteJid": "={{ $('SetInitialData').item.json.customerPhone }}@s.whatsapp.net",
+        "messageText": "={{ $('BuildMessages').item.json.messageToClient }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1072,
+        -48
+      ],
+      "id": "cdca6a24-d2aa-4c87-9c8b-359829071eba",
+      "name": "Send to Client",
+      "credentials": {
+        "evolutionApi": {
+          "id": "j5AbWpMg04wmHEJE",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "Agente_Agendamento_HC",
+        "remoteJid": "={{ $('SearchConsultant').item.json.property_phone.replace(/\\D/g, '') }}@s.whatsapp.net",
+        "messageText": "={{ $('BuildConsultantMessage').item.json.messageToConsultant }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1552,
+        192
+      ],
+      "id": "64ecae67-e875-4b8c-8731-bc51b887cda4",
+      "name": "Send to Consultant",
+      "credentials": {
+        "evolutionApi": {
+          "id": "j5AbWpMg04wmHEJE",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "customerPhoneNumber"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -608,
+        80
+      ],
+      "id": "d0581397-d47f-4030-b01f-fc68e40c6533",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "value": "bf1094d6-c997-456f-82eb-cd30352c85c3",
+          "mode": "list",
+          "cachedResultName": "Lista de Contatos"
+        },
+        "returnAll": true,
+        "filterType": "manual",
+        "filters": {
+          "conditions": [
+            {
+              "key": "clientPhone|formula",
+              "condition": "contains",
+              "returnType": "text",
+              "textValue": "={{ $json.customerPhone }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        -128,
+        80
+      ],
+      "id": "ceaf33da-0e7b-46f2-b4cc-6bc5e917732e",
+      "name": "SearchClient",
+      "credentials": {
+        "notionApi": {
+          "id": "D1pXvNxNoBaVi0WB",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "customerPhone",
+              "value": "={{ $json.customerPhoneNumber.replace('@s.whatsapp.net', '') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -368,
+        80
+      ],
+      "id": "6370adfb-48cc-4c5e-abee-3a001f453861",
+      "name": "SetInitialData"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "get",
+        "pageId": {
+          "__rl": true,
+          "value": "={{ $('PrepareData').item.json.consultantId }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        1072,
+        192
+      ],
+      "id": "bc248240-e656-4061-82c2-42ec01f4cf51",
+      "name": "SearchConsultant",
+      "credentials": {
+        "notionApi": {
+          "id": "D1pXvNxNoBaVi0WB",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "c_7884974ab5a1eab27a106c4a78d7d6daf6c68570378b40d003382781ced7f9f4@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "Teste - HC"
+        },
+        "returnAll": true,
+        "timeMin": "={{ $now.toISODate() }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        80,
+        80
+      ],
+      "id": "2f57b1a0-d3a7-4929-9619-f22f74998261",
+      "name": "GetMeet",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "Bct71lYLp9OoL4OX",
+          "name": "Google HC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Pega o e-mail do cliente que encontramos no Notion.\n// Usamos $items() para buscar de um nó anterior com segurança.\nconst clientEmail = $items('SearchClient')[0].json.property_e_mail;\n\n// Pega a lista de todos os eventos futuros que o Google Calendar retornou.\nconst allFutureEvents = $input.all();\n\n// Filtra essa lista para manter apenas os eventos onde o nosso cliente é um convidado.\nconst clientEvents = allFutureEvents.filter(event => {\n  // Verifica se a lista de convidados (attendees) existe.\n  if (!event.json.attendees) {\n    return false;\n  }\n  // Procura na lista de convidados por um que tenha o mesmo e-mail do nosso cliente.\n  return event.json.attendees.some(attendee => attendee.email === clientEmail);\n});\n\n// Se não encontrarmos nenhum evento para este cliente, retornamos um objeto vazio\n// para que o fluxo não quebre nos próximos nós.\nif (clientEvents.length === 0) {\n  return [{ json: { summary: 'Nenhum compromisso encontrado', start: { dateTime: new Date().toISOString() } } }];\n}\n\n// Ordena os eventos encontrados pela data de início, do mais próximo para o mais distante.\nclientEvents.sort((a, b) => new Date(a.json.start.dateTime) - new Date(b.json.start.dateTime));\n\n// Retorna apenas o primeiro item da lista ordenada, que é o próximo compromisso do cliente.\nreturn [clientEvents[0]];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        288,
+        80
+      ],
+      "id": "33e8a7bb-149e-4ca5-9c32-e8f1d2ea9d41",
+      "name": "Filter and Select Meeting"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "displayName",
+              "value": "={{ $('SearchClient').item.json.property_client_nick || $('SearchClient').item.json.name.split(' ')[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "2",
+              "name": "consultantId",
+              "value": "={{ $('SearchClient').item.json.property_responsible_consultant[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "f1de2c25-8c94-4c66-a01d-f6125c2840ec",
+              "name": "meetingSummary",
+              "value": "={{ $('Filter and Select Meeting').item.json.summary }}",
+              "type": "string"
+            },
+            {
+              "id": "c0635c4c-3014-4ec3-a8c2-4040553ea2fc",
+              "name": "meetingDateTime",
+              "value": "={{ DateTime.fromISO($('Filter and Select Meeting').item.json.start.dateTime).setZone('America/Sao_Paulo').toFormat('dd/MM/yyyy \\'às\\' HH:mm') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        80
+      ],
+      "id": "03bcc777-063e-4d9a-b05d-948e0d122407",
+      "name": "PrepareData"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "messageToConsultant",
+              "value": "=✅ Reunião Confirmada\nOlá, {{ $('SearchConsultant').item.json.property_name }}. \nO cliente *{{ $('PrepareData').item.json.displayName }}* acabou de confirmar a reunião:\n*Compromisso:* {{ $('PrepareData').item.json.meetingSummary }}\n*Data e Hora:* {{ $('PrepareData').item.json.meetingDateTime }}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1312,
+        192
+      ],
+      "id": "fdabeaf9-02ab-46c1-9270-3f16461c99c6",
+      "name": "BuildConsultantMessage"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b6ffd3c9-a8d5-4c9b-a994-6a30914edc53",
+              "name": "messageToClient",
+              "value": "=Olá, {{ $('PrepareData').item.json.displayName }} \nAgradecemos por confirmar sua reunião. Estamos ansiosos para conversar com você!\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        688,
+        80
+      ],
+      "id": "2d331249-95a1-471b-ade9-044cf5364c1c",
+      "name": "BuildMessages"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "SetInitialData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SearchClient": {
+      "main": [
+        [
+          {
+            "node": "GetMeet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SetInitialData": {
+      "main": [
+        [
+          {
+            "node": "SearchClient",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SearchConsultant": {
+      "main": [
+        [
+          {
+            "node": "BuildConsultantMessage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetMeet": {
+      "main": [
+        [
+          {
+            "node": "Filter and Select Meeting",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter and Select Meeting": {
+      "main": [
+        [
+          {
+            "node": "PrepareData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PrepareData": {
+      "main": [
+        [
+          {
+            "node": "BuildMessages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "BuildConsultantMessage": {
+      "main": [
+        [
+          {
+            "node": "Send to Consultant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "BuildMessages": {
+      "main": [
+        [
+          {
+            "node": "Send to Client",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "SearchConsultant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0279a5bd-c0a6-4303-8ad9-a04b03e76521",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c639fe7ebeb422477546545535913c1fe6d467efc75f0ba65b23a5e5a0935928"
+  },
+  "id": "sw5NIQwhdDsbcvnw",
+  "tags": []
+}
