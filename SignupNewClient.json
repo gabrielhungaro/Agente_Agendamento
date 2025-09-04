@@ -1,0 +1,631 @@
+{
+  "name": "SignupNewClient",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Cadastro de Dados - Hungaro Consultoria",
+        "formDescription": "Cadastramento de dados de cliente.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Nome",
+              "placeholder": "Nome Completo",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Data de Nascimento",
+              "fieldType": "date",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Gênero",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Feminino"
+                  },
+                  {
+                    "option": "Masculino"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "E-mail",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Telefone",
+              "placeholder": "+55 11 99999-9999",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "RG",
+              "placeholder": "00.000.000-0",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Data de Expedição",
+              "fieldType": "date"
+            },
+            {
+              "fieldLabel": "CPF",
+              "placeholder": "000.000.000.00",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Estado Civil",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Solteiro(a)"
+                  },
+                  {
+                    "option": "Namorando"
+                  },
+                  {
+                    "option": "Casado(a)"
+                  },
+                  {
+                    "option": "Divorciado(a)"
+                  },
+                  {
+                    "option": "Viúvo(a)"
+                  },
+                  {
+                    "option": "Noivo(a)"
+                  },
+                  {
+                    "option": "União Estável"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Possui Filhos(as)"
+            },
+            {
+              "fieldLabel": "Profissão",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Onde trabalha?",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Regime de trabalho",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "CEP",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Endereço Completo",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false,
+          "buttonLabel": "Enviar",
+          "path": "signupnewclient",
+          "respondWithOptions": {
+            "values": {
+              "respondWith": "=text",
+              "formSubmittedText": "=Cadastro efetuado com sucesso. Entraremos em contato em breve para os próximos passos!"
+            }
+          },
+          "customCss": ":root {\n\t--font-family: 'Open Sans', sans-serif;\n\t--font-weight-normal: 400;\n\t--font-weight-bold: 600;\n\t--font-size-body: 12px;\n\t--font-size-label: 14px;\n\t--font-size-test-notice: 12px;\n\t--font-size-input: 14px;\n\t--font-size-header: 20px;\n\t--font-size-paragraph: 14px;\n\t--font-size-link: 12px;\n\t--font-size-error: 12px;\n\t--font-size-html-h1: 28px;\n\t--font-size-html-h2: 20px;\n\t--font-size-html-h3: 16px;\n\t--font-size-html-h4: 14px;\n\t--font-size-html-h5: 12px;\n\t--font-size-html-h6: 10px;\n\t--font-size-subheader: 14px;\n\n\t/* Colors */\n\t--color-background: #efeee9;\n\t--color-test-notice-text: #e6a23d;\n\t--color-test-notice-bg: #fefaf6;\n\t--color-test-notice-border: #f6dcb7;\n\t--color-card-bg: #ffffff;\n\t--color-card-border: #ccc5be;/*dbdfe7*/\n\t--color-card-shadow: rgba(99, 77, 255, 0.06);\n\t--color-link: #7e8186;\n\t--color-header: #262625;\n\t--color-label: #3d3d3c;\n\t--color-input-border: #ccc5be;\n\t--color-input-text: #71747A;\n\t--color-focus-border: rgb(46, 111, 95);/*rgb(90, 76, 194);*/\n\t--color-submit-btn-bg: #2e6f5f;\n\t--color-submit-btn-text: #efeee9;\n\t--color-error: #ea1f30;\n\t--color-required: #ff6d5a;\n\t--color-clear-button-bg: #7e8186;\n\t--color-html-text: #555;\n\t--color-html-link: #ff6d5a;\n\t--color-header-subtext: #7e8186;\n\n\t/* Border Radii */\n\t--border-radius-card: 8px;\n\t--border-radius-input: 6px;\n\t--border-radius-clear-btn: 50%;\n\t--card-border-radius: 8px;\n\n\t/* Spacing */\n\t--padding-container-top: 24px;\n\t--padding-card: 24px;\n\t--padding-test-notice-vertical: 12px;\n\t--padding-test-notice-horizontal: 24px;\n\t--margin-bottom-card: 16px;\n\t--padding-form-input: 12px;\n\t--card-padding: 24px;\n\t--card-margin-bottom: 16px;\n\n\t/* Dimensions */\n\t--container-width: 448px;\n\t--submit-btn-height: 48px;\n\t--checkbox-size: 18px;\n\n\t/* Others */\n\t--box-shadow-card: 0px 4px 16px 0px var(--color-card-shadow);\n\t--opacity-placeholder: 0.5;\n}"
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -48,
+        0
+      ],
+      "id": "955b68e1-bcc7-400d-9eb2-895171738fad",
+      "name": "On form submission",
+      "webhookId": "4f163c71-2be3-486c-860a-7e7cb9324f2d"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a894d062-e997-4544-b951-9d99a76774ff",
+              "name": "clientName",
+              "value": "={{ $json.Nome }}",
+              "type": "string"
+            },
+            {
+              "id": "ee79e4fb-6477-46ec-8657-36f0a5b3c088",
+              "name": "Data de Nascimento",
+              "value": "={{ $json['Data de Nascimento'] }}",
+              "type": "string"
+            },
+            {
+              "id": "6057a492-198b-4a75-bafa-e39e16347d0a",
+              "name": "clientGender",
+              "value": "={{ $json['Gênero'] }}",
+              "type": "string"
+            },
+            {
+              "id": "580c6cad-7374-4f09-b96b-814e34b643b0",
+              "name": "clientEmail",
+              "value": "={{ $json['E-mail'] }}",
+              "type": "string"
+            },
+            {
+              "id": "38df6a67-cfc8-4949-9697-340565a0b1d8",
+              "name": "clientPhone",
+              "value": "={{ $json.Telefone }}",
+              "type": "string"
+            },
+            {
+              "id": "85862dd0-5b26-4741-8c9c-ec4fdcd5d8cd",
+              "name": "clientRG",
+              "value": "={{ $json.RG }}",
+              "type": "string"
+            },
+            {
+              "id": "ba7757d0-9eff-405a-82fb-d92303ab9005",
+              "name": "clientRGExpeditionDate",
+              "value": "={{ $json['Data de Expedição'] }}",
+              "type": "string"
+            },
+            {
+              "id": "8feca21d-5ee6-4501-8b4b-6243fad0610f",
+              "name": "clientCPF",
+              "value": "={{ $json.CPF }}",
+              "type": "string"
+            },
+            {
+              "id": "b20b2523-1ba0-4b3e-97bf-639e6a02af0f",
+              "name": "clientMartialStatus",
+              "value": "={{ $json['Estado Civil'] }}",
+              "type": "string"
+            },
+            {
+              "id": "22814b0a-3b17-4145-8354-ac05c3711360",
+              "name": "clientChildren",
+              "value": "={{ $json['Possui Filhos(as)'] }}",
+              "type": "string"
+            },
+            {
+              "id": "9be6c6f1-ec34-418c-8379-1d513d977025",
+              "name": "clientJobTitle",
+              "value": "={{ $json['Profissão'] }}",
+              "type": "string"
+            },
+            {
+              "id": "9ef67fb2-d015-4228-b759-8682b18b9754",
+              "name": "clientCompanyName",
+              "value": "={{ $json['Onde trabalha?'] }}",
+              "type": "string"
+            },
+            {
+              "id": "066abfb2-25e5-4cd7-9fc0-f884280c6898",
+              "name": "clientEmploymentStatus",
+              "value": "={{ $json['Regime de trabalho'] }}",
+              "type": "string"
+            },
+            {
+              "id": "61f12fdd-0983-4acd-b97e-d97316fabf28",
+              "name": "clientCEP",
+              "value": "={{ $json.CEP }}",
+              "type": "string"
+            },
+            {
+              "id": "e7f58784-f38e-433c-8573-1e8d991ee741",
+              "name": "clientAddress",
+              "value": "={{ $json['Endereço Completo'] }}",
+              "type": "string"
+            },
+            {
+              "id": "5b730662-0129-4713-ae33-efa51cc9cf3f",
+              "name": "submitedAt",
+              "value": "={{ $json.submittedAt }}",
+              "type": "string"
+            },
+            {
+              "id": "68d8161d-dff5-4fda-b43b-7429ab734a21",
+              "name": "clientType",
+              "value": "Cliente",
+              "type": "string"
+            },
+            {
+              "id": "91de233d-c20a-423f-87e9-86751840316d",
+              "name": "clientStatus",
+              "value": "Ativo",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        160,
+        0
+      ],
+      "id": "91100aba-0fa9-490f-b79f-1feed2b8ff9d",
+      "name": "GetFormData"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "533aca73-c4ae-4478-a04b-5d109c36d929",
+              "name": "clientID",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "acea053e-b8c6-4661-941c-a41bddbbbebe",
+              "name": "clientName",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "db96c94f-6608-4848-bf19-3dc18a7e9a04",
+              "name": "clientPhone",
+              "value": "={{ $json.property_client_phone.replace(/\\D/g, '') }}",
+              "type": "string"
+            },
+            {
+              "id": "d7da06f1-9456-4ab0-bfb6-d5dc2dbc2c27",
+              "name": "clientURL",
+              "value": "={{ $json.url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        608,
+        0
+      ],
+      "id": "daf09d48-76f4-4df6-9b1b-44705f7e9bd1",
+      "name": "SetNotionClientData"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": {
+          "__rl": true,
+          "value": "bf1094d6-c997-456f-82eb-cd30352c85c3",
+          "mode": "list",
+          "cachedResultName": "Lista de Contatos",
+          "cachedResultUrl": "https://www.notion.so/bf1094d6c997456f82ebcd30352c85c3"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Name|title",
+              "title": "={{ $json.clientName }}"
+            },
+            {
+              "key": "Data de Nascimento|date",
+              "includeTime": false,
+              "date": "={{ $json['Data de Nascimento'] }}"
+            },
+            {
+              "key": "Gênero|select",
+              "selectValue": "={{ $json.clientGender }}"
+            },
+            {
+              "key": "E-mail|email",
+              "emailValue": "={{ $json.clientEmail }}"
+            },
+            {
+              "key": "Telefone|phone_number",
+              "phoneValue": "={{ $json.clientPhone }}"
+            },
+            {
+              "key": "RG|rich_text",
+              "textContent": "={{ $json.clientRG }}"
+            },
+            {
+              "key": "Data de Expedição|date",
+              "includeTime": false,
+              "date": "={{ $json.clientRGExpeditionDate }}"
+            },
+            {
+              "key": "CPF/CNPJ|rich_text",
+              "textContent": "={{ $json.clientCPF }}"
+            },
+            {
+              "key": "Estado Civil|select",
+              "selectValue": "={{ $json.clientMartialStatus }}"
+            },
+            {
+              "key": "Filhos|rich_text",
+              "textContent": "={{ $json.clientChildren }}"
+            },
+            {
+              "key": "Profissão/Atuação|rich_text",
+              "textContent": "={{ $json.clientJobTitle }}"
+            },
+            {
+              "key": "Empresa|rich_text",
+              "textContent": "={{ $json.clientCompanyName }}"
+            },
+            {
+              "key": "Regime de Trabalho|rich_text",
+              "textContent": "={{ $json.clientEmploymentStatus }}"
+            },
+            {
+              "key": "CEP|rich_text",
+              "textContent": "={{ $json.clientCEP }}"
+            },
+            {
+              "key": "Endereço|rich_text",
+              "textContent": "={{ $json.clientAddress }}"
+            },
+            {
+              "key": "Tipo de Contato|select",
+              "selectValue": "={{ $json.clientType }}"
+            },
+            {
+              "key": "Contract Status|select",
+              "selectValue": "={{ $json.clientStatus }}"
+            }
+          ]
+        },
+        "options": {
+          "iconType": "emoji",
+          "icon": "👤"
+        }
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        384,
+        0
+      ],
+      "id": "176d6822-83be-4866-ad6c-e3c68ace792a",
+      "name": "CreateNewClient",
+      "credentials": {
+        "notionApi": {
+          "id": "D1pXvNxNoBaVi0WB",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "533aca73-c4ae-4478-a04b-5d109c36d929",
+              "name": "consultantID",
+              "value": "=",
+              "type": "string"
+            },
+            {
+              "id": "acea053e-b8c6-4661-941c-a41bddbbbebe",
+              "name": "consultantName",
+              "value": "=Consultor Gabriel Hungaro",
+              "type": "string"
+            },
+            {
+              "id": "d7da06f1-9456-4ab0-bfb6-d5dc2dbc2c27",
+              "name": "consultantPhone",
+              "value": "=5511989214740",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        880,
+        -96
+      ],
+      "id": "e502343a-e21b-4f49-bc6c-da840ccde8d6",
+      "name": "SetConsultantData"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "59d4fca9-4ade-4a27-b9fa-117443aafc65",
+              "name": "alertMessage",
+              "value": "=Olá, {{ $json.consultantName }}. \nUm novo cliente se cadastrou em nosso sistema, atualize o cadastro alocando um Consultor(a) responsável pelo atendimento.\n\nCliente: *{{ $('SetNotionClientData').item.json.clientName }}* \nContato do cliente: https://api.whatsapp.com/send?phone={{ $('SetNotionClientData').item.json.clientPhone }}\n\nLink do cliente no sistema: {{ $('SetNotionClientData').item.json.clientURL }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1088,
+        -96
+      ],
+      "id": "fae6c66c-a492-4ee6-b4d5-25f993388ee5",
+      "name": "Build Consultant Alert"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "59d4fca9-4ade-4a27-b9fa-117443aafc65",
+              "name": "alertMessage",
+              "value": "=Olá, {{ $json.clientName }}.\n\nSeus dados foram cadastrados com sucesso em nosso sistema!\n\nPara que possamos realizar uma análise financeira detalhada e montar o seu planejamento de forma personalizada, preciso que me encaminhe as seguintes informações:\n\n📌 *Extrato das contas correntes* do início do ano até hoje ou dos últimos 6 meses;\n\n📌 *Fatura do cartão de crédito* do início do ano até hoje ou dos últimos 6 meses;\n\n📌 *Planilha ou anotações de controle financeiro*, caso tenha;\n\n📌 *Detalhamento dos investimentos*, incluindo posição, preço médio e rendimento atual de cada ativo, caso possua;\n\n📌 *Informações sobre financiamentos ou dívidas*, como contrato e fluxo de pagamento, caso tenha;\n\n📌 *Lista de acontecimentos até o final do ano*, como aniversários, datas comemorativas e momentos importantes, informando a data e o gasto esperado;\n\n📌 *Lista de objetivos prioritários*, como viagens, compras ou outros planos. Se houver um detalhamento (data, custos, etc.), favor enviar junto.\n\nPor favor, envie os arquivos nos formatos *PDF* e também em *CSV ou Excel*.\n\nPode fazer o envio através desse e-mail: gabriel@hungaroconsultoria.com.br\n\nSe precisar de qualquer esclarecimento, estou à disposição! Assim que possível, por gentileza, me envie essas informações para que possamos avançar com o planejamento.\n\nAguardo seu retorno!",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        880,
+        96
+      ],
+      "id": "a2f658ae-dd00-43c6-bd25-aed6221a99db",
+      "name": "Build Client Alert"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "Agente_Agendamento_HC",
+        "remoteJid": "={{ $('SetNotionClientData').item.json.clientPhone }}@s.whatsapp.net",
+        "messageText": "={{ $json.alertMessage }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1072,
+        96
+      ],
+      "id": "8769d36e-1ed1-4589-89ce-d74c6fa5c43e",
+      "name": "SendClientAlert",
+      "credentials": {
+        "evolutionApi": {
+          "id": "j5AbWpMg04wmHEJE",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "Agente_Agendamento_HC",
+        "remoteJid": "={{ $('SetConsultantData').item.json.consultantPhone }}@s.whatsapp.net",
+        "messageText": "={{ $json.alertMessage }}",
+        "options_message": {
+          "linkPreview": false
+        }
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        -96
+      ],
+      "id": "6e231dfa-2719-4053-a89b-b7123eeddabd",
+      "name": "SendConsultantAlert",
+      "credentials": {
+        "evolutionApi": {
+          "id": "j5AbWpMg04wmHEJE",
+          "name": "Evolution account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "GetFormData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetFormData": {
+      "main": [
+        [
+          {
+            "node": "CreateNewClient",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CreateNewClient": {
+      "main": [
+        [
+          {
+            "node": "SetNotionClientData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SetNotionClientData": {
+      "main": [
+        [
+          {
+            "node": "SetConsultantData",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Build Client Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SetConsultantData": {
+      "main": [
+        [
+          {
+            "node": "Build Consultant Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Consultant Alert": {
+      "main": [
+        [
+          {
+            "node": "SendConsultantAlert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Client Alert": {
+      "main": [
+        [
+          {
+            "node": "SendClientAlert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c7aff897-39b2-4134-a55c-9b2de6c6a727",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c639fe7ebeb422477546545535913c1fe6d467efc75f0ba65b23a5e5a0935928"
+  },
+  "id": "ly11JdgkspR1F88D",
+  "tags": []
+}
