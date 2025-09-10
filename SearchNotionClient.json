@@ -1,0 +1,442 @@
+{
+  "name": "SearchNotionClient",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "clientID"
+            },
+            {
+              "name": "clientName"
+            },
+            {
+              "name": "clientEmail"
+            },
+            {
+              "name": "clientPhone"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -48,
+        -256
+      ],
+      "id": "3c390b63-c13b-4b86-9039-29a0df798813",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1d7bb0bb-4255-47f0-86e1-ccc0fe22ea8e",
+              "name": "clientID",
+              "value": "={{ $json.clientID }}",
+              "type": "string"
+            },
+            {
+              "id": "392e09eb-4a75-4424-94fc-fc4e0a9a9abf",
+              "name": "clientName",
+              "value": "={{ $json.clientName }}",
+              "type": "string"
+            },
+            {
+              "id": "7a9720d9-4cb8-469c-82a3-740cecf4bc05",
+              "name": "clientEmail",
+              "value": "={{ $json.clientEmail }}",
+              "type": "string"
+            },
+            {
+              "id": "ef0418d5-fc36-470e-a6e3-12786ce446f7",
+              "name": "clientPhone",
+              "value": "={{ $json.clientPhone }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        160,
+        -256
+      ],
+      "id": "0b13f261-5078-4198-b4e7-8228800e0d3b",
+      "name": "SetClientData"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -48,
+        -448
+      ],
+      "id": "29b4f7d3-7ca6-4ce9-977e-12e0ad990222",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "get",
+        "pageId": {
+          "__rl": true,
+          "value": "={{ $json.clientID }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        656,
+        -464
+      ],
+      "id": "5a92504e-ee40-42ca-a13f-dd2c731d10a9",
+      "name": "SearchClientByID",
+      "credentials": {
+        "notionApi": {
+          "id": "D1pXvNxNoBaVi0WB",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "value": "bf1094d6-c997-456f-82eb-cd30352c85c3",
+          "mode": "list",
+          "cachedResultName": "Lista de Contatos",
+          "cachedResultUrl": "https://www.notion.so/bf1094d6c997456f82ebcd30352c85c3"
+        },
+        "filterType": "manual",
+        "filters": {
+          "conditions": [
+            {
+              "key": "E-mail|email",
+              "condition": "equals",
+              "emailValue": "={{ $json.clientEmail }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        656,
+        -208
+      ],
+      "id": "84ea7eb5-41a7-4b93-8d84-21ab9f325872",
+      "name": "SearchClientByEmail",
+      "credentials": {
+        "notionApi": {
+          "id": "D1pXvNxNoBaVi0WB",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.clientID }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    },
+                    "id": "7566c1ee-e4df-4d07-bac6-0653a4a0bd75"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "ID"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c98f918a-6b92-420d-b34f-00c400dbf38d",
+                    "leftValue": "={{ $json.clientName }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "name"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2741095a-1681-4d7c-a114-a5b47616fed8",
+                    "leftValue": "={{ $json.clientEmail }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "email"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f696b774-39f4-46f0-9144-3ae5315d3442",
+                    "leftValue": "={{ $json.clientPhone }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "phone"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        368,
+        -288
+      ],
+      "id": "b32bb3a4-aa04-4beb-836b-4c8c3d7b4060",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "value": "bf1094d6-c997-456f-82eb-cd30352c85c3",
+          "mode": "list",
+          "cachedResultName": "Lista de Contatos",
+          "cachedResultUrl": "https://www.notion.so/bf1094d6c997456f82ebcd30352c85c3"
+        },
+        "filterType": "manual",
+        "filters": {
+          "conditions": [
+            {
+              "key": "Name|title",
+              "condition": "equals",
+              "titleValue": "={{ $json.clientName }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        656,
+        -336
+      ],
+      "id": "0eb4eb2b-93d0-4dda-a4b6-e99dd4683a5a",
+      "name": "SearchClientByName",
+      "credentials": {
+        "notionApi": {
+          "id": "D1pXvNxNoBaVi0WB",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "value": "bf1094d6-c997-456f-82eb-cd30352c85c3",
+          "mode": "list",
+          "cachedResultName": "Lista de Contatos",
+          "cachedResultUrl": "https://www.notion.so/bf1094d6c997456f82ebcd30352c85c3"
+        },
+        "filterType": "manual",
+        "filters": {
+          "conditions": [
+            {
+              "key": "clientPhone|formula",
+              "condition": "equals",
+              "returnType": "text",
+              "textValue": "={{ $json.clientPhone }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        656,
+        -80
+      ],
+      "id": "bbb34a02-dea6-4f74-8241-02ee2148c336",
+      "name": "SearchClientByPhone",
+      "credentials": {
+        "notionApi": {
+          "id": "D1pXvNxNoBaVi0WB",
+          "name": "Notion account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "When clicking ‘Execute workflow’": [
+      {
+        "json": {
+          "clientID": "26a3cc9265b581dc9b59fbc7b649a8f0?",
+          "clientName": "Anna Laura Guercio",
+          "clientEmail": "annalaguercio@gmail.com",
+          "clientPhone": "+55 11 93427-3302"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "SetClientData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SetClientData": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "SetClientData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SearchClientByID": {
+      "main": [
+        []
+      ]
+    },
+    "SearchClientByEmail": {
+      "main": [
+        []
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "SearchClientByID",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "SearchClientByName",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "SearchClientByEmail",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "SearchClientByPhone",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "65590ce4-dce0-4544-9281-df7e0a22d9e4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c639fe7ebeb422477546545535913c1fe6d467efc75f0ba65b23a5e5a0935928"
+  },
+  "id": "6d2UYCmueDMAmy1N",
+  "tags": []
+}

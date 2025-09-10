@@ -1,0 +1,785 @@
+{
+  "name": "CreateNewNotionClient",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "533aca73-c4ae-4478-a04b-5d109c36d929",
+              "name": "clientID",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "acea053e-b8c6-4661-941c-a41bddbbbebe",
+              "name": "clientName",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "db96c94f-6608-4848-bf19-3dc18a7e9a04",
+              "name": "clientPhone",
+              "value": "={{ $json.property_client_phone.replace(/\\D/g, '') }}",
+              "type": "string"
+            },
+            {
+              "id": "d7da06f1-9456-4ab0-bfb6-d5dc2dbc2c27",
+              "name": "clientURL",
+              "value": "={{ $json.url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1056,
+        96
+      ],
+      "id": "bd67cbfc-3d88-4cbe-b1f3-9744b8678671",
+      "name": "SetNotionClientData"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": {
+          "__rl": true,
+          "value": "bf1094d6-c997-456f-82eb-cd30352c85c3",
+          "mode": "list",
+          "cachedResultName": "Lista de Contatos",
+          "cachedResultUrl": "https://www.notion.so/bf1094d6c997456f82ebcd30352c85c3"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Name|title",
+              "title": "={{ $('SetClientData').item.json.clientName }}"
+            },
+            {
+              "key": "E-mail|email",
+              "emailValue": "={{ $('SetClientData').item.json.clientEmail }}"
+            },
+            {
+              "key": "Telefone|phone_number",
+              "phoneValue": "={{ $('SetClientData').item.json.clientPhone }}"
+            },
+            {
+              "key": "Tipo de Contato|select",
+              "selectValue": "={{ $('SetClientData').item.json.clientType }}"
+            },
+            {
+              "key": "Contract Status|select",
+              "selectValue": "={{ $('SetClientData').item.json.contractStatus }}"
+            }
+          ]
+        },
+        "options": {
+          "iconType": "emoji",
+          "icon": "👤"
+        }
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        832,
+        96
+      ],
+      "id": "a8ad173f-364a-430e-bb73-42a0846b142b",
+      "name": "CreateNewClient",
+      "credentials": {
+        "notionApi": {
+          "id": "D1pXvNxNoBaVi0WB",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "533aca73-c4ae-4478-a04b-5d109c36d929",
+              "name": "consultantID",
+              "value": "=",
+              "type": "string"
+            },
+            {
+              "id": "acea053e-b8c6-4661-941c-a41bddbbbebe",
+              "name": "consultantName",
+              "value": "=Consultor Gabriel Hungaro",
+              "type": "string"
+            },
+            {
+              "id": "d7da06f1-9456-4ab0-bfb6-d5dc2dbc2c27",
+              "name": "consultantPhone",
+              "value": "=5511989214740",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1488,
+        0
+      ],
+      "id": "695b87e3-10cf-403e-838d-6d375ba48ac7",
+      "name": "SetConsultantData"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "59d4fca9-4ade-4a27-b9fa-117443aafc65",
+              "name": "alertMessage",
+              "value": "=Olá, {{ $json.consultantName }}. \nUm novo cliente se cadastrou em nosso sistema, atualize o cadastro alocando um Consultor(a) responsável pelo atendimento.\n\nCliente: *{{ $('SetNotionClientData').item.json.clientName }}* \nContato do cliente: https://api.whatsapp.com/send?phone={{ $('SetNotionClientData').item.json.clientPhone }}\n\nLink do cliente no sistema: {{ $('SetNotionClientData').item.json.clientURL }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1696,
+        0
+      ],
+      "id": "99f92e8b-8f5f-47fd-b4a4-5d6ec12025d8",
+      "name": "Build Consultant Alert"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "59d4fca9-4ade-4a27-b9fa-117443aafc65",
+              "name": "alertMessage",
+              "value": "=Olá, {{ $json.clientName }}.\n\nSeus dados foram cadastrados com sucesso em nosso sistema!\n\nPara que possamos realizar uma análise financeira detalhada e montar o seu planejamento de forma personalizada, preciso que me encaminhe as seguintes informações:\n\n📌 *Extrato das contas correntes* do início do ano até hoje ou dos últimos 6 meses;\n\n📌 *Fatura do cartão de crédito* do início do ano até hoje ou dos últimos 6 meses;\n\n📌 *Planilha ou anotações de controle financeiro*, caso tenha;\n\n📌 *Detalhamento dos investimentos*, incluindo posição, preço médio e rendimento atual de cada ativo, caso possua;\n\n📌 *Informações sobre financiamentos ou dívidas*, como contrato e fluxo de pagamento, caso tenha;\n\n📌 *Lista de acontecimentos até o final do ano*, como aniversários, datas comemorativas e momentos importantes, informando a data e o gasto esperado;\n\n📌 *Lista de objetivos prioritários*, como viagens, compras ou outros planos. Se houver um detalhamento (data, custos, etc.), favor enviar junto.\n\nPor favor, envie os arquivos nos formatos *PDF* e também em *CSV ou Excel*.\n\nPode fazer o envio através desse e-mail: gabriel@hungaroconsultoria.com.br\n\nSe precisar de qualquer esclarecimento, estou à disposição! Assim que possível, por gentileza, me envie essas informações para que possamos avançar com o planejamento.\n\nAguardo seu retorno!",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1488,
+        -320
+      ],
+      "id": "efc08d3a-8d4b-44d4-9851-f54a4438b59f",
+      "name": "Build Client Alert"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "Agente_Agendamento_HC",
+        "remoteJid": "={{ $('SetNotionClientData').item.json.clientPhone }}@s.whatsapp.net",
+        "messageText": "={{ $json.alertMessage }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1680,
+        -320
+      ],
+      "id": "9665c7ec-92a3-4d40-aa08-eca52551a4a0",
+      "name": "SendClientAlert",
+      "credentials": {
+        "evolutionApi": {
+          "id": "j5AbWpMg04wmHEJE",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "Agente_Agendamento_HC",
+        "remoteJid": "={{ $('SetConsultantData').item.json.consultantPhone }}@s.whatsapp.net",
+        "messageText": "={{ $json.alertMessage }}",
+        "options_message": {
+          "linkPreview": false
+        }
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        0
+      ],
+      "id": "45fcdd44-042f-4e7b-bda2-c9ba89ea456e",
+      "name": "SendConsultantAlert",
+      "credentials": {
+        "evolutionApi": {
+          "id": "j5AbWpMg04wmHEJE",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "nnL9qdUFTJNVIKgJ",
+          "mode": "list",
+          "cachedResultName": "CreateNewClientFolder"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "clientName": "={{ $('SetNotionClientData').item.json.clientName }}",
+            "sendLog": "={{ $('GetFormData').item.json.sendLog }}"
+          },
+          "matchingColumns": [
+            "clientName"
+          ],
+          "schema": [
+            {
+              "id": "clientName",
+              "displayName": "clientName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "sendLog",
+              "displayName": "sendLog",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "boolean",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        2160,
+        112
+      ],
+      "id": "109f2cff-d034-49ea-9428-d47fe31e0b7b",
+      "name": "CreateClientFolder"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "392e09eb-4a75-4424-94fc-fc4e0a9a9abf",
+              "name": "clientName",
+              "value": "={{ $json.clientName }}",
+              "type": "string"
+            },
+            {
+              "id": "7a9720d9-4cb8-469c-82a3-740cecf4bc05",
+              "name": "clientEmail",
+              "value": "={{ $json.clientEmail }}",
+              "type": "string"
+            },
+            {
+              "id": "ef0418d5-fc36-470e-a6e3-12786ce446f7",
+              "name": "clientPhone",
+              "value": "={{ $json.clientPhone }}",
+              "type": "string"
+            },
+            {
+              "id": "1d7bb0bb-4255-47f0-86e1-ccc0fe22ea8e",
+              "name": "clientType",
+              "value": "={{ $json.clientType }}",
+              "type": "string"
+            },
+            {
+              "id": "e9c6932d-cb9f-4459-9b7f-e92d15d76041",
+              "name": "contractStatus",
+              "value": "={{ $json.clientStatus }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -32,
+        0
+      ],
+      "id": "735bc6d0-261e-4947-825d-7e068a21f06e",
+      "name": "SetClientData"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4cac7107-8078-4cd0-bcd9-c28df424cc47",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "found",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        368,
+        0
+      ],
+      "id": "2ae8a2d6-60cf-46cf-89e5-34fbe1bd6b9b",
+      "name": "Route by Status",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const newClientPhone = $('SetClientData').first().json.clientPhone;\n\n// Carrega a lista de clientes que foram efetivamente encontrados.\nconst foundClients = $input.all();\n\nconst finalItems = [];\n\n// Converte a lista de clientes encontrados em um conjunto (Set) de e-mails para busca rápida.\nconst foundPhones = new Set(foundClients.map(item => item.json.property_telefone));\n\n// Agora, iteramos sobre a lista original de convidados.\nfor (const clientItem of foundClients) {\n  const clientPhone = clientItem.json.property_telefone;\n\n  // Verificamos se o e-mail do convidado está na lista de e-mails encontrados.\n  if (foundPhones.has(clientPhone)) {\n    const clientData = foundClients.find(c => c.json.property_telefone === newClientPhone);\n    if (clientData) {\n      clientData.json.status = 'found';\n      clientData.json.client = clientItem.json;\n      finalItems.push(clientData);\n    }\n  } else {\n    const notFoundItem = {\n      json: {\n        status: 'not_found',\n        client: clientItem.json,\n      }\n    };\n    finalItems.push(notFoundItem);\n  }\n}\n\n// Retorna a lista única e combinada.\nreturn finalItems;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        -272
+      ],
+      "id": "f844892a-09e8-493d-8e10-464d8c035a53",
+      "name": "Tag Found and Not Found",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "value": "bf1094d6-c997-456f-82eb-cd30352c85c3",
+          "mode": "list",
+          "cachedResultName": "Lista de Contatos",
+          "cachedResultUrl": "https://www.notion.so/bf1094d6c997456f82ebcd30352c85c3"
+        },
+        "returnAll": true,
+        "filterType": "manual",
+        "filters": {
+          "conditions": [
+            {
+              "key": "Telefone|phone_number",
+              "condition": "equals",
+              "phoneNumberValue": "={{ $json.clientPhone }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        160,
+        0
+      ],
+      "id": "73c7000d-1501-4615-8e16-7d1b52637307",
+      "name": "SearchClient",
+      "alwaysOutputData": true,
+      "credentials": {
+        "notionApi": {
+          "id": "D1pXvNxNoBaVi0WB",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        624,
+        96
+      ],
+      "id": "6704ba0e-2568-47b9-a4e1-e617d9244893",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "formTitle": "Hungaro Consultoria - Interno",
+        "formDescription": "Cadastro de Cliente - Notion",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Nome",
+              "placeholder": "Nome Completo",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "E-mail",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Telefone",
+              "placeholder": "+55 11 99999-9999",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Tipo de Contato",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Quente"
+                  },
+                  {
+                    "option": "Frio"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Status de Contrato",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Novo"
+                  },
+                  {
+                    "option": "Inativo"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Enviar Log",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "True"
+                  },
+                  {
+                    "option": "False"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "responseMode": "lastNode",
+        "options": {
+          "appendAttribution": false,
+          "buttonLabel": "Enviar",
+          "path": "newclient",
+          "respondWithOptions": {
+            "values": {
+              "respondWith": "=text",
+              "formSubmittedText": "=Cliente cadastrado efetuado com sucesso. Entraremos em contato em breve para os próximos passos!"
+            }
+          },
+          "customCss": ":root {\n\t--font-family: 'Open Sans', sans-serif;\n\t--font-weight-normal: 400;\n\t--font-weight-bold: 600;\n\t--font-size-body: 12px;\n\t--font-size-label: 14px;\n\t--font-size-test-notice: 12px;\n\t--font-size-input: 14px;\n\t--font-size-header: 20px;\n\t--font-size-paragraph: 14px;\n\t--font-size-link: 12px;\n\t--font-size-error: 12px;\n\t--font-size-html-h1: 28px;\n\t--font-size-html-h2: 20px;\n\t--font-size-html-h3: 16px;\n\t--font-size-html-h4: 14px;\n\t--font-size-html-h5: 12px;\n\t--font-size-html-h6: 10px;\n\t--font-size-subheader: 14px;\n\n\t/* Colors */\n\t--color-background: #efeee9;\n\t--color-test-notice-text: #e6a23d;\n\t--color-test-notice-bg: #fefaf6;\n\t--color-test-notice-border: #f6dcb7;\n\t--color-card-bg: #ffffff;\n\t--color-card-border: #ccc5be;/*dbdfe7*/\n\t--color-card-shadow: rgba(99, 77, 255, 0.06);\n\t--color-link: #7e8186;\n\t--color-header: #262625;\n\t--color-label: #3d3d3c;\n\t--color-input-border: #ccc5be;\n\t--color-input-text: #71747A;\n\t--color-focus-border: rgb(46, 111, 95);/*rgb(90, 76, 194);*/\n\t--color-submit-btn-bg: #2e6f5f;\n\t--color-submit-btn-text: #efeee9;\n\t--color-error: #ea1f30;\n\t--color-required: #ff6d5a;\n\t--color-clear-button-bg: #7e8186;\n\t--color-html-text: #555;\n\t--color-html-link: #ff6d5a;\n\t--color-header-subtext: #7e8186;\n\n\t/* Border Radii */\n\t--border-radius-card: 8px;\n\t--border-radius-input: 6px;\n\t--border-radius-clear-btn: 50%;\n\t--card-border-radius: 8px;\n\n\t/* Spacing */\n\t--padding-container-top: 24px;\n\t--padding-card: 24px;\n\t--padding-test-notice-vertical: 12px;\n\t--padding-test-notice-horizontal: 24px;\n\t--margin-bottom-card: 16px;\n\t--padding-form-input: 12px;\n\t--card-padding: 24px;\n\t--card-margin-bottom: 16px;\n\n\t/* Dimensions */\n\t--container-width: 448px;\n\t--submit-btn-height: 48px;\n\t--checkbox-size: 18px;\n\n\t/* Others */\n\t--box-shadow-card: 0px 4px 16px 0px var(--color-card-shadow);\n\t--opacity-placeholder: 0.5;\n}"
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -480,
+        0
+      ],
+      "id": "7886464f-106f-47da-9a61-a5956aeb9bdc",
+      "name": "On form submission",
+      "webhookId": "4f163c71-2be3-486c-860a-7e7cb9324f2d"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a894d062-e997-4544-b951-9d99a76774ff",
+              "name": "clientName",
+              "value": "={{ $json.Nome }}",
+              "type": "string"
+            },
+            {
+              "id": "580c6cad-7374-4f09-b96b-814e34b643b0",
+              "name": "clientEmail",
+              "value": "={{ $json['E-mail'] }}",
+              "type": "string"
+            },
+            {
+              "id": "38df6a67-cfc8-4949-9697-340565a0b1d8",
+              "name": "clientPhone",
+              "value": "={{ $json.Telefone }}",
+              "type": "string"
+            },
+            {
+              "id": "5b730662-0129-4713-ae33-efa51cc9cf3f",
+              "name": "submitedAt",
+              "value": "={{ $json.submittedAt }}",
+              "type": "string"
+            },
+            {
+              "id": "68d8161d-dff5-4fda-b43b-7429ab734a21",
+              "name": "clientType",
+              "value": "={{ $json['Tipo de Contato'] }}",
+              "type": "string"
+            },
+            {
+              "id": "91de233d-c20a-423f-87e9-86751840316d",
+              "name": "clientStatus",
+              "value": "={{ $json['Status de Contrato'] }}",
+              "type": "string"
+            },
+            {
+              "id": "dab36a54-e1ea-4855-a845-6f80dfbe7a23",
+              "name": "sendLog",
+              "value": "={{ $json['Enviar Log'] }}",
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -256,
+        0
+      ],
+      "id": "f453ead5-2018-4e7a-bac5-3b9b9d9dd821",
+      "name": "GetFormData"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "34798401-e268-4a6d-b08e-f691aec4f87a",
+              "leftValue": "={{ $('GetFormData').item.json.sendLog }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1264,
+        96
+      ],
+      "id": "8086825d-19b1-4c1b-874e-2d872e96ba6c",
+      "name": "If"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "CreateNewClient": {
+      "main": [
+        [
+          {
+            "node": "SetNotionClientData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SetNotionClientData": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SetConsultantData": {
+      "main": [
+        [
+          {
+            "node": "Build Consultant Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Consultant Alert": {
+      "main": [
+        [
+          {
+            "node": "SendConsultantAlert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Client Alert": {
+      "main": [
+        [
+          {
+            "node": "SendClientAlert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SendConsultantAlert": {
+      "main": [
+        [
+          {
+            "node": "CreateClientFolder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SetClientData": {
+      "main": [
+        [
+          {
+            "node": "SearchClient",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tag Found and Not Found": {
+      "main": [
+        []
+      ]
+    },
+    "SearchClient": {
+      "main": [
+        [
+          {
+            "node": "Route by Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Status": {
+      "main": [
+        [],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No Operation, do nothing": {
+      "main": [
+        [
+          {
+            "node": "CreateNewClient",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "GetFormData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetFormData": {
+      "main": [
+        [
+          {
+            "node": "SetClientData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "SetConsultantData",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CreateClientFolder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b829890b-06da-4908-843a-a66af5eb0a6a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c639fe7ebeb422477546545535913c1fe6d467efc75f0ba65b23a5e5a0935928"
+  },
+  "id": "tnahMk7Rn26mCMsD",
+  "tags": []
+}

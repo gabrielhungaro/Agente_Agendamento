@@ -1,0 +1,1619 @@
+{
+  "name": "CreateNewClientFolder",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "clientName"
+            },
+            {
+              "name": "sendLog",
+              "type": "boolean"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -96,
+        0
+      ],
+      "id": "9ee7b728-3125-4ba2-973a-4956d64fab55",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "392e09eb-4a75-4424-94fc-fc4e0a9a9abf",
+              "name": "clientName",
+              "value": "={{ $json.clientName }}",
+              "type": "string"
+            },
+            {
+              "id": "7a9720d9-4cb8-469c-82a3-740cecf4bc05",
+              "name": "clientEmail",
+              "value": "={{ $json.clientEmail }}",
+              "type": "string"
+            },
+            {
+              "id": "ef0418d5-fc36-470e-a6e3-12786ce446f7",
+              "name": "clientPhone",
+              "value": "={{ $json.clientPhone }}",
+              "type": "string"
+            },
+            {
+              "id": "1d7bb0bb-4255-47f0-86e1-ccc0fe22ea8e",
+              "name": "clientType",
+              "value": "={{ $json.clientType }}",
+              "type": "string"
+            },
+            {
+              "id": "e9c6932d-cb9f-4459-9b7f-e92d15d76041",
+              "name": "contractStatus",
+              "value": "={{ $json.clientStatus }}",
+              "type": "string"
+            },
+            {
+              "id": "383f29c0-aaab-4219-86d1-933762c2ef05",
+              "name": "sendLog",
+              "value": "={{ $json.sendLog }}",
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        0
+      ],
+      "id": "e070e969-94f5-4d8e-9da1-1af11c777ea4",
+      "name": "SetClientData"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{ $('SetClientData').item.json.clientName}}",
+        "filter": {
+          "whatToSearch": "folders"
+        },
+        "options": {
+          "fields": [
+            "id",
+            "name",
+            "webViewLink"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        576,
+        0
+      ],
+      "id": "4e2fd62d-979c-40b0-8c3a-c3464adecf28",
+      "name": "Search files and folders",
+      "retryOnFail": false,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "WHuG3xND2NegooEE",
+          "name": "Drive HC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Cadastro - Hungaro Consultoria",
+        "formDescription": "Cadastro para início de planejamento",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Nome",
+              "placeholder": "Nome Completo",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "E-mail",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Telefone",
+              "placeholder": "+55 11 99999-9999",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Tipo de Contato",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Quente"
+                  },
+                  {
+                    "option": "Frio"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Status de Contrato",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Novo"
+                  },
+                  {
+                    "option": "Inativo"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false,
+          "buttonLabel": "Enviar",
+          "path": "newclient",
+          "respondWithOptions": {
+            "values": {
+              "respondWith": "=text",
+              "formSubmittedText": "=Cadastro efetuado com sucesso. Entraremos em contato em breve para os próximos passos!"
+            }
+          },
+          "customCss": ":root {\n\t--font-family: 'Open Sans', sans-serif;\n\t--font-weight-normal: 400;\n\t--font-weight-bold: 600;\n\t--font-size-body: 12px;\n\t--font-size-label: 14px;\n\t--font-size-test-notice: 12px;\n\t--font-size-input: 14px;\n\t--font-size-header: 20px;\n\t--font-size-paragraph: 14px;\n\t--font-size-link: 12px;\n\t--font-size-error: 12px;\n\t--font-size-html-h1: 28px;\n\t--font-size-html-h2: 20px;\n\t--font-size-html-h3: 16px;\n\t--font-size-html-h4: 14px;\n\t--font-size-html-h5: 12px;\n\t--font-size-html-h6: 10px;\n\t--font-size-subheader: 14px;\n\n\t/* Colors */\n\t--color-background: #efeee9;\n\t--color-test-notice-text: #e6a23d;\n\t--color-test-notice-bg: #fefaf6;\n\t--color-test-notice-border: #f6dcb7;\n\t--color-card-bg: #ffffff;\n\t--color-card-border: #ccc5be;/*dbdfe7*/\n\t--color-card-shadow: rgba(99, 77, 255, 0.06);\n\t--color-link: #7e8186;\n\t--color-header: #262625;\n\t--color-label: #3d3d3c;\n\t--color-input-border: #ccc5be;\n\t--color-input-text: #71747A;\n\t--color-focus-border: rgb(46, 111, 95);/*rgb(90, 76, 194);*/\n\t--color-submit-btn-bg: #2e6f5f;\n\t--color-submit-btn-text: #efeee9;\n\t--color-error: #ea1f30;\n\t--color-required: #ff6d5a;\n\t--color-clear-button-bg: #7e8186;\n\t--color-html-text: #555;\n\t--color-html-link: #ff6d5a;\n\t--color-header-subtext: #7e8186;\n\n\t/* Border Radii */\n\t--border-radius-card: 8px;\n\t--border-radius-input: 6px;\n\t--border-radius-clear-btn: 50%;\n\t--card-border-radius: 8px;\n\n\t/* Spacing */\n\t--padding-container-top: 24px;\n\t--padding-card: 24px;\n\t--padding-test-notice-vertical: 12px;\n\t--padding-test-notice-horizontal: 24px;\n\t--margin-bottom-card: 16px;\n\t--padding-form-input: 12px;\n\t--card-padding: 24px;\n\t--card-margin-bottom: 16px;\n\n\t/* Dimensions */\n\t--container-width: 448px;\n\t--submit-btn-height: 48px;\n\t--checkbox-size: 18px;\n\n\t/* Others */\n\t--box-shadow-card: 0px 4px 16px 0px var(--color-card-shadow);\n\t--opacity-placeholder: 0.5;\n}"
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -96,
+        -208
+      ],
+      "id": "452ba484-be93-4b5b-8015-a4b5874ad80c",
+      "name": "On form submission",
+      "webhookId": "4f163c71-2be3-486c-860a-7e7cb9324f2d"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a894d062-e997-4544-b951-9d99a76774ff",
+              "name": "clientName",
+              "value": "={{ $json.Nome }}",
+              "type": "string"
+            },
+            {
+              "id": "580c6cad-7374-4f09-b96b-814e34b643b0",
+              "name": "clientEmail",
+              "value": "={{ $json['E-mail'] }}",
+              "type": "string"
+            },
+            {
+              "id": "38df6a67-cfc8-4949-9697-340565a0b1d8",
+              "name": "clientPhone",
+              "value": "={{ $json.Telefone }}",
+              "type": "string"
+            },
+            {
+              "id": "5b730662-0129-4713-ae33-efa51cc9cf3f",
+              "name": "submitedAt",
+              "value": "={{ $json.submittedAt }}",
+              "type": "string"
+            },
+            {
+              "id": "68d8161d-dff5-4fda-b43b-7429ab734a21",
+              "name": "clientType",
+              "value": "={{ $json['Tipo de Contato'] }}",
+              "type": "string"
+            },
+            {
+              "id": "91de233d-c20a-423f-87e9-86751840316d",
+              "name": "clientStatus",
+              "value": "={{ $json['Status de Contrato'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        128,
+        -208
+      ],
+      "id": "d8ac0923-ff51-4f49-92b2-94afbd986829",
+      "name": "GetFormData"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c2e6047e-5ead-4676-b7b9-19fc3a09878e",
+              "name": "folderID",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        784,
+        0
+      ],
+      "id": "6c3d9621-2bd9-4ebb-b4e7-d9b488870301",
+      "name": "SetFolderData"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "99200a78-f2e4-4433-9aab-892bec4f9da0",
+              "leftValue": "={{ $('SetFolderData').item.json.folderID}}",
+              "rightValue": "=",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        992,
+        0
+      ],
+      "id": "eb42f30b-519a-4c1f-8f28-281cfeaa0f06",
+      "name": "ExistFolder"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{ $now.year }}",
+        "filter": {
+          "driveId": {
+            "mode": "list",
+            "value": "My Drive"
+          },
+          "folderId": {
+            "__rl": true,
+            "value": "1jMl3m-n0HNBKMywoQlaInqhUQE6fJndc",
+            "mode": "list",
+            "cachedResultName": "Interessados",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1jMl3m-n0HNBKMywoQlaInqhUQE6fJndc"
+          },
+          "whatToSearch": "folders"
+        },
+        "options": {
+          "fields": [
+            "id",
+            "name",
+            "webViewLink"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1200,
+        80
+      ],
+      "id": "4b56810c-fc66-4eeb-9683-c485c9af828d",
+      "name": "SearchCurrentYearFolder",
+      "retryOnFail": false,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "WHuG3xND2NegooEE",
+          "name": "Drive HC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f89d366c-dd95-4644-9a62-2e18c8b35d05",
+              "name": "parentID",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1408,
+        80
+      ],
+      "id": "a36d5b6f-bce5-4306-99e9-785f10ac9e6f",
+      "name": "SetFolderParentID"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $('SetClientData').item.json.clientName }}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.parentID }}",
+          "mode": "id"
+        },
+        "options": {
+          "simplifyOutput": true
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1616,
+        80
+      ],
+      "id": "4efa90f3-f53d-4097-bd75-3547fcc3fc1d",
+      "name": "CreateClientFolder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "WHuG3xND2NegooEE",
+          "name": "Drive HC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ae26672a-c8cb-45de-bc3d-2e189029bca4",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "e560e24e-eaaf-49bd-8a6c-feca3543cd69",
+              "name": "url",
+              "value": "={{ $json.webViewLink }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2000,
+        80
+      ],
+      "id": "9c72c752-251a-430e-bc8e-db23ab01423d",
+      "name": "SetClientFolderData"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0aadbb93-ad19-4328-981d-852117cf257a",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        784,
+        624
+      ],
+      "id": "62289f63-b0c6-4a84-910e-49daf5987682",
+      "name": "SetStatementYearData"
+    },
+    {
+      "parameters": {
+        "jsCode": "const months = [\n  \"Janeiro\", \"Fevereiro\", \"Março\", \"Abril\", \"Maio\", \"Junho\",\n  \"Julho\", \"Agosto\", \"Setembro\", \"Outubro\", \"Novembro\", \"Dezembro\"\n];\n\nconst items = [];\nfor (let i = 0; i < months.length; i++) {\n  const monthNumber = (i + 1).toString().padStart(2, '0');\n  items.push({\n    json: {\n      folderName: `${monthNumber} - ${months[i]}`, \n      parentFolderId: $('SetStatementYearData').item.json.id \n    }\n  });\n}\nreturn items;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        992,
+        624
+      ],
+      "id": "b98ae4dd-bf32-4e5f-93f6-3eabff7a5c98",
+      "name": "ConfigureMonthsLoop"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=Extratos",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        320,
+        1056
+      ],
+      "id": "c2c5e74f-2606-49e8-9903-8d97a78fc5eb",
+      "name": "CreateInitialStatement",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "WHuG3xND2NegooEE",
+          "name": "Drive HC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $now.year }}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        544,
+        624
+      ],
+      "id": "c91ae80d-b135-4e00-b955-4b6055629da7",
+      "name": "CreateStatementYear",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "WHuG3xND2NegooEE",
+          "name": "Drive HC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=Extratos",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        320,
+        624
+      ],
+      "id": "883378b0-b533-40c1-9602-0cdb13ffb3cc",
+      "name": "CreateStatement",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "WHuG3xND2NegooEE",
+          "name": "Drive HC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=Fluxo de Caixa",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        80,
+        672
+      ],
+      "id": "0e4fe729-4859-471e-9b40-c74552bf7ca6",
+      "name": "CreateFluxodeCaixa",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "WHuG3xND2NegooEE",
+          "name": "Drive HC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=Investimentos",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        80,
+        896
+      ],
+      "id": "88ff08de-6095-483f-8494-e7405ece3fa0",
+      "name": "CreateInvestimentos",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "WHuG3xND2NegooEE",
+          "name": "Drive HC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=Contrato",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        80,
+        480
+      ],
+      "id": "5d7a8b2d-83d9-44e7-8f0c-67c5e90b754f",
+      "name": "CreateContrato",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "WHuG3xND2NegooEE",
+          "name": "Drive HC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=Client History",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        80,
+        320
+      ],
+      "id": "4932fe02-80da-465a-8dc2-5462f4053e42",
+      "name": "CreateClientHistory",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "WHuG3xND2NegooEE",
+          "name": "Drive HC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=Documentos Iniciais",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        80,
+        1056
+      ],
+      "id": "0659a53c-ef9a-40d9-abea-eccdc1e56903",
+      "name": "CreateDocumentosIniciais",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "WHuG3xND2NegooEE",
+          "name": "Drive HC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $json.folderName }}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.parentFolderId }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1216,
+        624
+      ],
+      "id": "17d3a9e8-7d20-4ec2-a778-956ac0ead72b",
+      "name": "CreateMonths",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "WHuG3xND2NegooEE",
+          "name": "Drive HC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $now.year }}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        544,
+        1056
+      ],
+      "id": "75058fe8-816e-4972-95ae-2815677a20e6",
+      "name": "CreateStatementYear1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "WHuG3xND2NegooEE",
+          "name": "Drive HC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $json.folderName }}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.parentFolderId }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1216,
+        1056
+      ],
+      "id": "46d4ee21-89b7-490f-8641-a801c679e00c",
+      "name": "CreateMonths1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "WHuG3xND2NegooEE",
+          "name": "Drive HC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0aadbb93-ad19-4328-981d-852117cf257a",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        784,
+        1056
+      ],
+      "id": "ab3c8312-e813-43f7-b26b-df75aeb117fc",
+      "name": "SetInitialStatementYearData"
+    },
+    {
+      "parameters": {
+        "jsCode": "const months = [\n  \"Janeiro\", \"Fevereiro\", \"Março\", \"Abril\", \"Maio\", \"Junho\",\n  \"Julho\", \"Agosto\", \"Setembro\", \"Outubro\", \"Novembro\", \"Dezembro\"\n];\n\nconst items = [];\nfor (let i = 0; i < months.length; i++) {\n  const monthNumber = (i + 1).toString().padStart(2, '0');\n  items.push({\n    json: {\n      folderName: `${monthNumber} - ${months[i]}`, \n      parentFolderId: $('SetInitialStatementYearData').item.json.id \n    }\n  });\n}\nreturn items;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        992,
+        1056
+      ],
+      "id": "c1731800-f01e-4682-a359-d8a525a34091",
+      "name": "ConfigureInitialMonthsLoop"
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "value": "1OLZc7q66wsCbgL7fUqlMyJ2qmxF6MRlcMnxPF7_0u1I",
+          "mode": "list",
+          "cachedResultName": "Fluxo de Caixa 2025 - Padrão 2.2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OLZc7q66wsCbgL7fUqlMyJ2qmxF6MRlcMnxPF7_0u1I/edit?usp=drivesdk"
+        },
+        "name": "=Fluxo de Caixa {{ $now.year }} - {{ $('SetClientData').item.json.clientName }} 2.2",
+        "sameFolder": false,
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        320,
+        752
+      ],
+      "id": "94ace37e-5c53-4d92-9e6a-e4ee14679ea5",
+      "name": "CopyFluxoDeCaixa",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "WHuG3xND2NegooEE",
+          "name": "Drive HC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "value": "1HfC_j5o98liWTu7O0BxMVXgyPUEPNwicVWEkYhsPYn4",
+          "mode": "list",
+          "cachedResultName": "Conceito Padrão 2.2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HfC_j5o98liWTu7O0BxMVXgyPUEPNwicVWEkYhsPYn4/edit?usp=drivesdk"
+        },
+        "name": "=Conceito - {{ $('SetClientData').item.json.clientName }} 2.2",
+        "sameFolder": false,
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        80,
+        1248
+      ],
+      "id": "a8aa2aac-1bfe-4621-9835-8bfd9f934eea",
+      "name": "CopyConceito",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "WHuG3xND2NegooEE",
+          "name": "Drive HC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "value": "1qsXHeBfD-NqSlftjOb-1zBgvaKbKW40YEHodpPOT57M",
+          "mode": "list",
+          "cachedResultName": "Carteira de Investimentos Padrão PF 1.0",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qsXHeBfD-NqSlftjOb-1zBgvaKbKW40YEHodpPOT57M/edit?usp=drivesdk"
+        },
+        "name": "=Carteira de Investimentos - {{ $('SetClientData').item.json.clientName }} - 1.0",
+        "sameFolder": false,
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        320,
+        896
+      ],
+      "id": "4fc6392c-2d9d-472d-9dab-aa3b4c884f03",
+      "name": "CopyInvestimentos",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "WHuG3xND2NegooEE",
+          "name": "Drive HC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "value": "1WlY61-DZCW0IRWtRWCo_mIH_ArgPyp5K",
+          "mode": "list",
+          "cachedResultName": "hs_hungaroConsultoria_contrato_LIGHT_01.docx",
+          "cachedResultUrl": "https://docs.google.com/document/d/1WlY61-DZCW0IRWtRWCo_mIH_ArgPyp5K/edit?usp=drivesdk&ouid=109652583641222700256&rtpof=true&sd=true"
+        },
+        "name": "={{ $now.year }}_hungaroConsultoria_contrato_{{ $('SetClientData').item.json.clientName }}",
+        "sameFolder": false,
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        320,
+        480
+      ],
+      "id": "ff5bd274-40e7-475d-9061-897a93b5e91d",
+      "name": "CopyContract",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "WHuG3xND2NegooEE",
+          "name": "Drive HC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "533aca73-c4ae-4478-a04b-5d109c36d929",
+              "name": "consultantID",
+              "value": "=",
+              "type": "string"
+            },
+            {
+              "id": "acea053e-b8c6-4661-941c-a41bddbbbebe",
+              "name": "consultantName",
+              "value": "=Consultor Gabriel Hungaro",
+              "type": "string"
+            },
+            {
+              "id": "d7da06f1-9456-4ab0-bfb6-d5dc2dbc2c27",
+              "name": "consultantPhone",
+              "value": "=5511989214740",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1888,
+        368
+      ],
+      "id": "f2b94725-e602-4b44-89df-64739b1e1cad",
+      "name": "SetConsultantData"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "59d4fca9-4ade-4a27-b9fa-117443aafc65",
+              "name": "alertMessage",
+              "value": "=Olá, {{ $json.consultantName }}. \nFoi criada a estrutura de pastas de um novo cliente no Drive.\n\nCliente: *{{ $('SetClientData').item.json.clientName }}* \nContato do cliente: https://api.whatsapp.com/send?phone={{ $('SetClientData').item.json.clientPhone }}\n\nLink da pasta do cliente no Drive: {{ $('SetClientFolderData').item.json.url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2096,
+        368
+      ],
+      "id": "a5a9d3af-036b-41b8-bab0-12f9c3e29089",
+      "name": "Build Consultant Alert"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "Agente_Agendamento_HC",
+        "remoteJid": "={{ $('SetConsultantData').item.json.consultantPhone }}@s.whatsapp.net",
+        "messageText": "={{ $json.alertMessage }}",
+        "options_message": {
+          "linkPreview": false
+        }
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        2288,
+        368
+      ],
+      "id": "bbce5ef8-6906-4873-af05-53a7495b07bc",
+      "name": "SendConsultantAlert",
+      "credentials": {
+        "evolutionApi": {
+          "id": "j5AbWpMg04wmHEJE",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch",
+        "numberInputs": 7
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1424,
+        304
+      ],
+      "id": "487d4009-a627-49ec-b134-410248eac6a0",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{ $json.name }}",
+        "filter": {
+          "whatToSearch": "folders"
+        },
+        "options": {
+          "fields": [
+            "id",
+            "name",
+            "webViewLink"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1792,
+        80
+      ],
+      "id": "1f3afbea-ba0b-4a10-8713-3a4a8bf338bf",
+      "name": "GetFolderData",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "WHuG3xND2NegooEE",
+          "name": "Drive HC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "34798401-e268-4a6d-b08e-f691aec4f87a",
+              "leftValue": "={{ $('SetClientData').item.json.sendLog }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1584,
+        384
+      ],
+      "id": "6036bfd3-c45f-4b48-be91-0a33cafb9403",
+      "name": "If"
+    }
+  ],
+  "pinData": {
+    "On form submission": [
+      {
+        "json": {
+          "Nome": "Anna Laura Guercio",
+          "E-mail": "annalaguercio@gmail.com",
+          "Telefone": "+55 11 93427-3302",
+          "Tipo de Contato": "Quente",
+          "Status de Contrato": "Novo",
+          "submittedAt": "2025-09-09T20:24:23.645-03:00",
+          "formMode": "test"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "SetClientData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SetClientData": {
+      "main": [
+        [
+          {
+            "node": "Search files and folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "GetFormData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetFormData": {
+      "main": [
+        []
+      ]
+    },
+    "Search files and folders": {
+      "main": [
+        [
+          {
+            "node": "SetFolderData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SetFolderData": {
+      "main": [
+        [
+          {
+            "node": "ExistFolder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ExistFolder": {
+      "main": [
+        [],
+        [
+          {
+            "node": "SearchCurrentYearFolder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SearchCurrentYearFolder": {
+      "main": [
+        [
+          {
+            "node": "SetFolderParentID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SetFolderParentID": {
+      "main": [
+        [
+          {
+            "node": "CreateClientFolder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CreateClientFolder": {
+      "main": [
+        [
+          {
+            "node": "GetFolderData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SetClientFolderData": {
+      "main": [
+        [
+          {
+            "node": "CreateClientHistory",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "CreateContrato",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "CreateFluxodeCaixa",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "CreateInvestimentos",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "CreateDocumentosIniciais",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "CopyConceito",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SetStatementYearData": {
+      "main": [
+        [
+          {
+            "node": "ConfigureMonthsLoop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ConfigureMonthsLoop": {
+      "main": [
+        [
+          {
+            "node": "CreateMonths",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CreateInitialStatement": {
+      "main": [
+        [
+          {
+            "node": "CreateStatementYear1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CreateStatementYear": {
+      "main": [
+        [
+          {
+            "node": "SetStatementYearData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CreateStatement": {
+      "main": [
+        [
+          {
+            "node": "CreateStatementYear",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CreateFluxodeCaixa": {
+      "main": [
+        [
+          {
+            "node": "CreateStatement",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "CopyFluxoDeCaixa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CreateDocumentosIniciais": {
+      "main": [
+        [
+          {
+            "node": "CreateInitialStatement",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CreateMonths": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "CreateStatementYear1": {
+      "main": [
+        [
+          {
+            "node": "SetInitialStatementYearData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SetInitialStatementYearData": {
+      "main": [
+        [
+          {
+            "node": "ConfigureInitialMonthsLoop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ConfigureInitialMonthsLoop": {
+      "main": [
+        [
+          {
+            "node": "CreateMonths1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CreateInvestimentos": {
+      "main": [
+        [
+          {
+            "node": "CopyInvestimentos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CreateContrato": {
+      "main": [
+        [
+          {
+            "node": "CopyContract",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SetConsultantData": {
+      "main": [
+        [
+          {
+            "node": "Build Consultant Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Consultant Alert": {
+      "main": [
+        [
+          {
+            "node": "SendConsultantAlert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CreateClientHistory": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CopyContract": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "CopyFluxoDeCaixa": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "CopyInvestimentos": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "CreateMonths1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 5
+          }
+        ]
+      ]
+    },
+    "CopyConceito": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 6
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetFolderData": {
+      "main": [
+        [
+          {
+            "node": "SetClientFolderData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "SetConsultantData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5fbb0079-07de-4e48-a673-3f2b27a4f79a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c639fe7ebeb422477546545535913c1fe6d467efc75f0ba65b23a5e5a0935928"
+  },
+  "id": "nnL9qdUFTJNVIKgJ",
+  "tags": []
+}

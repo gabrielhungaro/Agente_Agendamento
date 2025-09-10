@@ -3,8 +3,8 @@
   "nodes": [
     {
       "parameters": {
-        "formTitle": "Cadastro de Dados - Hungaro Consultoria",
-        "formDescription": "Cadastramento de dados de cliente.",
+        "formTitle": "Cadastro - Hungaro Consultoria",
+        "formDescription": "Cadastro para início de planejamento",
         "formFields": {
           "values": [
             {
@@ -82,7 +82,8 @@
                     "option": "União Estável"
                   }
                 ]
-              }
+              },
+              "requiredField": true
             },
             {
               "fieldLabel": "Possui Filhos(as)"
@@ -292,115 +293,11 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        608,
+        992,
         0
       ],
       "id": "daf09d48-76f4-4df6-9b1b-44705f7e9bd1",
       "name": "SetNotionClientData"
-    },
-    {
-      "parameters": {
-        "resource": "databasePage",
-        "databaseId": {
-          "__rl": true,
-          "value": "bf1094d6-c997-456f-82eb-cd30352c85c3",
-          "mode": "list",
-          "cachedResultName": "Lista de Contatos",
-          "cachedResultUrl": "https://www.notion.so/bf1094d6c997456f82ebcd30352c85c3"
-        },
-        "propertiesUi": {
-          "propertyValues": [
-            {
-              "key": "Name|title",
-              "title": "={{ $json.clientName }}"
-            },
-            {
-              "key": "Data de Nascimento|date",
-              "includeTime": false,
-              "date": "={{ $json['Data de Nascimento'] }}"
-            },
-            {
-              "key": "Gênero|select",
-              "selectValue": "={{ $json.clientGender }}"
-            },
-            {
-              "key": "E-mail|email",
-              "emailValue": "={{ $json.clientEmail }}"
-            },
-            {
-              "key": "Telefone|phone_number",
-              "phoneValue": "={{ $json.clientPhone }}"
-            },
-            {
-              "key": "RG|rich_text",
-              "textContent": "={{ $json.clientRG }}"
-            },
-            {
-              "key": "Data de Expedição|date",
-              "includeTime": false,
-              "date": "={{ $json.clientRGExpeditionDate }}"
-            },
-            {
-              "key": "CPF/CNPJ|rich_text",
-              "textContent": "={{ $json.clientCPF }}"
-            },
-            {
-              "key": "Estado Civil|select",
-              "selectValue": "={{ $json.clientMartialStatus }}"
-            },
-            {
-              "key": "Filhos|rich_text",
-              "textContent": "={{ $json.clientChildren }}"
-            },
-            {
-              "key": "Profissão/Atuação|rich_text",
-              "textContent": "={{ $json.clientJobTitle }}"
-            },
-            {
-              "key": "Empresa|rich_text",
-              "textContent": "={{ $json.clientCompanyName }}"
-            },
-            {
-              "key": "Regime de Trabalho|rich_text",
-              "textContent": "={{ $json.clientEmploymentStatus }}"
-            },
-            {
-              "key": "CEP|rich_text",
-              "textContent": "={{ $json.clientCEP }}"
-            },
-            {
-              "key": "Endereço|rich_text",
-              "textContent": "={{ $json.clientAddress }}"
-            },
-            {
-              "key": "Tipo de Contato|select",
-              "selectValue": "={{ $json.clientType }}"
-            },
-            {
-              "key": "Contract Status|select",
-              "selectValue": "={{ $json.clientStatus }}"
-            }
-          ]
-        },
-        "options": {
-          "iconType": "emoji",
-          "icon": "👤"
-        }
-      },
-      "type": "n8n-nodes-base.notion",
-      "typeVersion": 2.2,
-      "position": [
-        384,
-        0
-      ],
-      "id": "176d6822-83be-4866-ad6c-e3c68ace792a",
-      "name": "CreateNewClient",
-      "credentials": {
-        "notionApi": {
-          "id": "D1pXvNxNoBaVi0WB",
-          "name": "Notion account"
-        }
-      }
     },
     {
       "parameters": {
@@ -431,7 +328,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        880,
+        1264,
         -96
       ],
       "id": "e502343a-e21b-4f49-bc6c-da840ccde8d6",
@@ -444,7 +341,7 @@
             {
               "id": "59d4fca9-4ade-4a27-b9fa-117443aafc65",
               "name": "alertMessage",
-              "value": "=Olá, {{ $json.consultantName }}. \nUm novo cliente se cadastrou em nosso sistema, atualize o cadastro alocando um Consultor(a) responsável pelo atendimento.\n\nCliente: *{{ $('SetNotionClientData').item.json.clientName }}* \nContato do cliente: https://api.whatsapp.com/send?phone={{ $('SetNotionClientData').item.json.clientPhone }}\n\nLink do cliente no sistema: {{ $('SetNotionClientData').item.json.clientURL }}",
+              "value": "=Olá, {{ $json.consultantName }}. \nUm novo cliente atualizou seu cadastro com os dados básicos para dar início ao planejamento.\n\nFoi enviado um lembrete ao cliente com os dados financeiros necessários para início.\n\nCliente: *{{ $('SetNotionClientData').item.json.clientName }}* \nContato do cliente: https://api.whatsapp.com/send?phone={{ $('SetNotionClientData').item.json.clientPhone }}\n\nLink do cliente no sistema: {{ $('SetNotionClientData').item.json.clientURL }}",
               "type": "string"
             }
           ]
@@ -454,7 +351,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1088,
+        1472,
         -96
       ],
       "id": "fae6c66c-a492-4ee6-b4d5-25f993388ee5",
@@ -477,7 +374,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        880,
+        1264,
         96
       ],
       "id": "a2f658ae-dd00-43c6-bd25-aed6221a99db",
@@ -494,7 +391,7 @@
       "type": "n8n-nodes-evolution-api.evolutionApi",
       "typeVersion": 1,
       "position": [
-        1072,
+        1456,
         96
       ],
       "id": "8769d36e-1ed1-4589-89ce-d74c6fa5c43e",
@@ -519,7 +416,7 @@
       "type": "n8n-nodes-evolution-api.evolutionApi",
       "typeVersion": 1,
       "position": [
-        1280,
+        1664,
         -96
       ],
       "id": "6e231dfa-2719-4053-a89b-b7123eeddabd",
@@ -528,6 +425,203 @@
         "evolutionApi": {
           "id": "j5AbWpMg04wmHEJE",
           "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "6d2UYCmueDMAmy1N",
+          "mode": "list",
+          "cachedResultName": "SearchNotionClient"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "clientEmail": "={{ $json.clientEmail }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "clientID",
+              "displayName": "clientID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "clientName",
+              "displayName": "clientName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "clientEmail",
+              "displayName": "clientEmail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "clientPhone",
+              "displayName": "clientPhone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        368,
+        0
+      ],
+      "id": "d2936c02-5a68-402c-a015-830be98a4bf9",
+      "name": "Execute Workflow"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "533aca73-c4ae-4478-a04b-5d109c36d929",
+              "name": "clientID",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "acea053e-b8c6-4661-941c-a41bddbbbebe",
+              "name": "clientName",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "db96c94f-6608-4848-bf19-3dc18a7e9a04",
+              "name": "clientPhone",
+              "value": "={{ $json.property_client_phone.replace(/\\D/g, '') }}",
+              "type": "string"
+            },
+            {
+              "id": "d7da06f1-9456-4ab0-bfb6-d5dc2dbc2c27",
+              "name": "clientURL",
+              "value": "={{ $json.url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        576,
+        0
+      ],
+      "id": "27ff5d79-5176-4d26-a2a2-364e19590ef4",
+      "name": "GetClientToUpdateData"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "update",
+        "pageId": {
+          "__rl": true,
+          "value": "={{ $('GetClientToUpdateData').item.json.clientID }}",
+          "mode": "id"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Name|title",
+              "title": "={{ $('GetFormData').item.json.clientName }}"
+            },
+            {
+              "key": "Data de Nascimento|date",
+              "date": "={{ $('GetFormData').item.json['Data de Nascimento'] }}"
+            },
+            {
+              "key": "Gênero|select",
+              "selectValue": "={{ $('GetFormData').item.json.clientGender }}"
+            },
+            {
+              "key": "E-mail|email",
+              "emailValue": "={{ $('GetFormData').item.json.clientEmail }}"
+            },
+            {
+              "key": "Telefone|phone_number",
+              "phoneValue": "={{ $('GetFormData').item.json.clientPhone }}"
+            },
+            {
+              "key": "RG|rich_text",
+              "textContent": "={{ $('GetFormData').item.json.clientRG }}"
+            },
+            {
+              "key": "Data de Expedição|date",
+              "date": "={{ $('GetFormData').item.json.clientRGExpeditionDate }}"
+            },
+            {
+              "key": "CPF/CNPJ|rich_text",
+              "textContent": "={{ $('GetFormData').item.json.clientCPF }}"
+            },
+            {
+              "key": "Estado Civil|select",
+              "selectValue": "={{ $('GetFormData').item.json.clientMartialStatus }}"
+            },
+            {
+              "key": "Filhos|rich_text",
+              "textContent": "={{ $('GetFormData').item.json.clientChildren }}"
+            },
+            {
+              "key": "Profissão/Atuação|rich_text",
+              "textContent": "={{ $('GetFormData').item.json.clientJobTitle }}"
+            },
+            {
+              "key": "Empresa|rich_text",
+              "textContent": "={{ $('GetFormData').item.json.clientCompanyName }}"
+            },
+            {
+              "key": "Regime de Trabalho|rich_text",
+              "textContent": "={{ $('GetFormData').item.json.clientEmploymentStatus }}"
+            },
+            {
+              "key": "CEP|rich_text",
+              "textContent": "={{ $('GetFormData').item.json.clientCEP }}"
+            },
+            {
+              "key": "Endereço|rich_text",
+              "textContent": "={{ $('GetFormData').item.json.clientAddress }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        784,
+        0
+      ],
+      "id": "cd4ffda7-abfb-4b3c-a0bc-6c6e4188e88b",
+      "name": "UpdateClient",
+      "credentials": {
+        "notionApi": {
+          "id": "D1pXvNxNoBaVi0WB",
+          "name": "Notion account"
         }
       }
     }
@@ -549,18 +643,7 @@
       "main": [
         [
           {
-            "node": "CreateNewClient",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "CreateNewClient": {
-      "main": [
-        [
-          {
-            "node": "SetNotionClientData",
+            "node": "Execute Workflow",
             "type": "main",
             "index": 0
           }
@@ -615,13 +698,51 @@
           }
         ]
       ]
+    },
+    "SendConsultantAlert": {
+      "main": [
+        []
+      ]
+    },
+    "Execute Workflow": {
+      "main": [
+        [
+          {
+            "node": "GetClientToUpdateData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetClientToUpdateData": {
+      "main": [
+        [
+          {
+            "node": "UpdateClient",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "UpdateClient": {
+      "main": [
+        [
+          {
+            "node": "SetNotionClientData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "c7aff897-39b2-4134-a55c-9b2de6c6a727",
+  "versionId": "fdfd4e45-af48-44c3-be94-8b7f27903e2b",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "c639fe7ebeb422477546545535913c1fe6d467efc75f0ba65b23a5e5a0935928"
