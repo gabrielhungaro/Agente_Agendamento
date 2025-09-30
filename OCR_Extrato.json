@@ -1,0 +1,639 @@
+{
+  "name": "OCR_Extrato",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ocr_extrato",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -160,
+        -240
+      ],
+      "id": "a6e6a5e5-8996-41bc-9104-d1c9bd643942",
+      "name": "Webhook",
+      "webhookId": "dca2008a-47b3-4a1b-bfc8-c495ccf55b3c"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.fileData }}",
+        "options": {
+          "systemMessage": "=Você é um assistente de análise financeira. Analise o texto do extrato bancário a seguir e extraia todas as transações. Organize-as em uma tabela no formato JSON.\n\nA tabela deve conter os seguintes campos: \"Data\", \"Descrição\", \"Categoria de gastos\" e \"Valor\".\n\n- A \"Data\" deve estar no formato AAAA-MM-DD.\n- A \"Descrição\" deve ser o nome do estabelecimento ou da transação.\n- A \"Categoria de gastos\" deve ser uma categoria genérica como 'Alimentação', 'Transporte', 'Moradia', 'Lazer', 'Salário', 'Outros'.\n- O \"Valor\" deve ser um número no formato americano (ex: -1234.56 para débitos e 123.45 para créditos), sem o símbolo de moeda 'R$'.\n\nResponda apenas com o array de objetos JSON.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        1472,
+        -128
+      ],
+      "id": "09769c59-d9f8-47d1-8cf0-bd7cf68aec7e",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1472,
+        144
+      ],
+      "id": "fbc82a89-bedd-4547-99b1-b96aa4d9256c",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "nJopBduo6R0Rmkvt",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mistralAi",
+      "typeVersion": 1,
+      "position": [
+        96,
+        -768
+      ],
+      "id": "f052a069-267f-4e41-872e-c6e4bd6de6c6",
+      "name": "Extract text",
+      "credentials": {
+        "mistralCloudApi": {
+          "id": "MVONlDah3Z1Hb3up",
+          "name": "MistralLovable"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "binaryProperty": "file",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mistralAi",
+      "typeVersion": 1,
+      "position": [
+        320,
+        -768
+      ],
+      "id": "4a65bc49-5dad-4a56-92e8-40f03366551e",
+      "name": "Extract text1",
+      "credentials": {
+        "mistralCloudApi": {
+          "id": "MVONlDah3Z1Hb3up",
+          "name": "MistralLovable"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json.output.toJsonString() }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1808,
+        -128
+      ],
+      "id": "c8c1fcbb-a6b0-45bd-8c84-664e363b5ee5",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ea5da184-e335-46d6-9686-6627a39ea9ae",
+              "name": "fileType",
+              "value": "={{ $('Webhook').item.binary.file.fileExtension }}",
+              "type": "string"
+            },
+            {
+              "id": "a531b18a-ebd6-4eae-8d9b-873408135949",
+              "name": "file",
+              "value": "={{ $('Webhook').item.binary.file }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        64,
+        -400
+      ],
+      "id": "e4a076cb-996c-4a50-b0d0-d505a49d792a",
+      "name": "setFileData"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        288,
+        -256
+      ],
+      "id": "2bc558c1-35c4-4dde-998c-393fbe44457d",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "=file",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        944,
+        -352
+      ],
+      "id": "29d9fa91-479a-426f-8007-2d9ee8de130d",
+      "name": "ExtractFromPDF"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "binaryPropertyName": "file",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        944,
+        -128
+      ],
+      "id": "6de90e3e-cc7c-4834-b601-701bee971cd1",
+      "name": "ExtractFromCSV"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "88c3d33f-cb83-439f-a985-e9e0d9e4f4d8",
+              "name": "fileData",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1152,
+        -352
+      ],
+      "id": "498270f9-fcf1-451e-99be-4cd91d0463a7",
+      "name": "setPDFData"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.fileType }}",
+                    "rightValue": "pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "3cd91ce9-8ba9-4a65-b68c-84d663257398"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PDF"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c1d4c497-b0c4-48b7-9950-70991161bc11",
+                    "leftValue": "={{ $json.fileType }}",
+                    "rightValue": "csv",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "CSV"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "17eeb61f-e101-4317-8caf-346c87759d8e",
+                    "leftValue": "={{ $json.fileType }}",
+                    "rightValue": "xls",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "XLS"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "066c0a7e-6645-4c1d-a51e-c6305360636f",
+                    "leftValue": "={{ $json.fileType }}",
+                    "rightValue": "jpeg",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "JPEG"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        448,
+        -272
+      ],
+      "id": "0b33da90-b923-4f65-b16a-148618a08ea5",
+      "name": "SwitchFile",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "88c3d33f-cb83-439f-a985-e9e0d9e4f4d8",
+              "name": "fileData",
+              "value": "={{ $json.data }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1152,
+        -128
+      ],
+      "id": "5a070a9d-cabc-4cbc-8e1f-975f24e8e2b0",
+      "name": "setCSVData"
+    },
+    {
+      "parameters": {
+        "operation": "xls",
+        "binaryPropertyName": "file",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        944,
+        64
+      ],
+      "id": "f022a08f-fd66-41c7-9efa-3e8e88ace652",
+      "name": "ExtractFromXLS"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "88c3d33f-cb83-439f-a985-e9e0d9e4f4d8",
+              "name": "fileData",
+              "value": "={{ $json }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1152,
+        64
+      ],
+      "id": "8c19f244-118e-4c83-afa6-9366d1207efa",
+      "name": "setXLSData"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "text": "Analise o texto do extrato bancário a seguir e extraia todas as transações. Organize-as em uma tabela no formato JSON.\n\nA tabela deve conter os seguintes campos: \"Data\", \"Descrição\", \"Categoria de gastos\" e \"Valor\".",
+        "inputType": "binary",
+        "binaryPropertyName": "file",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        944,
+        240
+      ],
+      "id": "8b3cef91-a704-4367-bd28-6eadca7485e9",
+      "name": "Analyze image",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "nJopBduo6R0Rmkvt",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "88c3d33f-cb83-439f-a985-e9e0d9e4f4d8",
+              "name": "fileData",
+              "value": "={{ $json.content.parts[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1152,
+        240
+      ],
+      "id": "2e5dbc01-0290-4efc-8f45-bbbd7753636c",
+      "name": "setJPEGData"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "setFileData",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract text1": {
+      "main": [
+        []
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "setFileData": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "SwitchFile",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ExtractFromPDF": {
+      "main": [
+        [
+          {
+            "node": "setPDFData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ExtractFromCSV": {
+      "main": [
+        [
+          {
+            "node": "setCSVData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "setPDFData": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SwitchFile": {
+      "main": [
+        [
+          {
+            "node": "ExtractFromPDF",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ExtractFromCSV",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ExtractFromXLS",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Analyze image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "setCSVData": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ExtractFromXLS": {
+      "main": [
+        [
+          {
+            "node": "setXLSData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "setXLSData": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze image": {
+      "main": [
+        [
+          {
+            "node": "setJPEGData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "setJPEGData": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e4d40e08-adcc-48f9-86ae-82753e92942b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c639fe7ebeb422477546545535913c1fe6d467efc75f0ba65b23a5e5a0935928"
+  },
+  "id": "m7d5UEmZ0ihf92B9",
+  "tags": []
+}
