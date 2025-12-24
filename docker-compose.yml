@@ -114,7 +114,7 @@ services:
       
 # --- NOVO SERVIÇO: EVOLUTION API ---
   evolution_api:
-    image: atendai/evolution-api:latest # Imagem oficial da Evolution API
+    image: atendai/evolution-api:v2.1.1 # Imagem oficial da Evolution API
     container_name: evolution_api_service_vps
     ports:
       - 8080:8080 # Porta padrão da Evolution API
@@ -133,7 +133,7 @@ services:
       - WEBHOOK_GLOBAL_URL=http://n8n:5678/webhook/webhookagendamento # Webhook específico
       - WEBHOOK_GLOBAL_EVENTS=MESSAGE_RECEIVED,CONNECTION_STATUS
       - AUTHENTICATION_API_KEY=jTUGJBACqMHht7haSTK6dE66zOv6lsetaebRZbtZSV7aVaZQotuocpMIpxRPCS3G9LI9lLuIlKItyoc2RKDvgMhPiIFA4FKonftFz7LbnAyCotITK21czwkInJLLkqlm # Defina uma chave de API segura
-      - CONFIG_SESSION_PHONE_VERSION=2.3000.1024876920
+      - CONFIG_SESSION_PHONE_VERSION=2.3000.1031458304
     volumes:
       - ./evolution_instances:/app/instances # Volume para persistir as sessões
     depends_on:
