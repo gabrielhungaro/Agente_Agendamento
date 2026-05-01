@@ -15,7 +15,7 @@ services:
       - app-network
 
   n8n:
-    image: n8nio/n8n:1.106.3
+    image: n8nio/n8n:2.18.5
     container_name: n8n_service_vps
     ports:
       - "5678:5678"
