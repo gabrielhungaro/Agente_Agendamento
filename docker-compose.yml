@@ -100,7 +100,7 @@ services:
     image: devlikeapro/waha:latest # Imagem recomendada do Waha
     container_name: waha_service_vps
     ports:
-      - "3000:3030"
+      - "3030:3030"
     environment:
       # Conecta o Waha ao Redis para salvar a sessão
       - WHA_ENGINE_SESSION_STORAGE=redis
