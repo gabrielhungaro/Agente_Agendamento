@@ -65,7 +65,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "http://waha:3000/api/sendText",
+        "url": "http://waha:3030/api/sendText",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={\n  \"chatId\": \"{{ $('DadosNotion').item.json.clientePhone.replace(/\\D/g, '') }}@c.us\",\n  \"session\": \"default\",\n  \"text\": \"Muuuuito bom dia, boa tarde ou boa noite a depender do horário atual, {{ $('DadosNotion').item.json.clienteName }}, tudo bem?\\n\\nGostaria de confirmar nossa próxima reunião agendada para *{{ $('DadosAgenda').item.json.diaSemana }} - {{ $('DadosAgenda').item.json.dataReuniao }}, das {{ $('DadosAgenda').item.json.horaInicio }} às {{ $('DadosAgenda').item.json.horaFim }}*. Para que possamos otimizar nosso tempo e que seu planejamento financeiro seja o mais completo possível, peço que, por gentileza, encaminhe os seguintes documentos até *{{ DateTime.fromISO($('DadosAgenda').item.json.dataReuniaoISO).minus({days: 2}).toFormat('dd/MM') }} às 10h*:\\n\\n📌 *Extrato bancário* da data da nossa última reunião até hoje.\\n\\n📌 *Faturas de cartão de crédito* do mesmo período.\\n\\n📌 Lista de acontecimentos previstos para os próximos meses ainda não planejados.\\n\\nPor favor, envie os arquivos nos formatos *PDF* e também em *CSV ou Excel*.\\n\\nPode fazer o envio através desse e-mail: {{ $('DadosNotion').item.json.consultorEmail }}\\n\\nCaso tenha alguma dúvida ou precise de qualquer esclarecimento, estou à disposição.\\n\\nAguardo seu retorno e nos vemos em breve!\\n\\nAtenciosamente, Assistente HC!\"\n}\n",
