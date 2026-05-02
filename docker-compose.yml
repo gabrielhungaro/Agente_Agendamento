@@ -5,8 +5,8 @@ services:
     image: caddy:2
     restart: always
     ports:
-      - "60:80"
-      - "8443:443"
+      - "80:80"
+      - "443:443"
     volumes:
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
@@ -100,7 +100,7 @@ services:
     image: devlikeapro/waha:latest # Imagem recomendada do Waha
     container_name: waha_service_vps
     ports:
-      - "3030:3000"
+      - "3000:3000"
     environment:
       # Conecta o Waha ao Redis para salvar a sessão
       - WHA_ENGINE_SESSION_STORAGE=redis

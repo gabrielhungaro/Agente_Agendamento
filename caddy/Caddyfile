@@ -10,7 +10,7 @@ evolutionapi.vps.hungaroconsultoria.com.br {
 
 # Waha
 waha.vps.hungaroconsultoria.com.br {
-    reverse_proxy waha_service_vps:3030
+    reverse_proxy waha_service_vps:3000
 }
 
 # Redis Commander
