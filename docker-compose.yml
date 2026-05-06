@@ -133,7 +133,7 @@ services:
       - WEBHOOK_GLOBAL_URL=http://n8n:5678/webhook/webhookagendamento # Webhook específico
       - WEBHOOK_GLOBAL_EVENTS=MESSAGE_RECEIVED,CONNECTION_STATUS
       - AUTHENTICATION_API_KEY=jTUGJBACqMHht7haSTK6dE66zOv6lsetaebRZbtZSV7aVaZQotuocpMIpxRPCS3G9LI9lLuIlKItyoc2RKDvgMhPiIFA4FKonftFz7LbnAyCotITK21czwkInJLLkqlm # Defina uma chave de API segura
-      - CONFIG_SESSION_PHONE_VERSION=2.3000.1031458304
+      - CONFIG_SESSION_PHONE_VERSION=2.3000.1038839325
     volumes:
       - ./evolution_instances:/app/instances # Volume para persistir as sessões
     depends_on:
